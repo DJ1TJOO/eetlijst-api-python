@@ -1,0 +1,24 @@
+fragment SettlementFields on eetschema_settlements {
+    id
+    group_id
+    created_at
+    updated_at
+    created_by: user {
+        id
+        name
+    }
+    expenses_total: expenses_aggregate(where: { settlement_expense_id: { _is_null: true } }) {
+        aggregate {
+            sum {
+                payed_amount
+            }
+        }
+    }
+    adjustments_total: expenses_aggregate(where: { settlement_expense_id: { _is_null: false } }) {
+        aggregate {
+            sum {
+                payed_amount
+            }
+        }
+    }
+}

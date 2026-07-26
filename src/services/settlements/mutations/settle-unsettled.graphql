@@ -1,0 +1,11 @@
+mutation SettleUnsettledExpenses($settlementId: uuid!, $where: eetschema_expense_bool_exp!) {
+        update_eetschema_expense(
+            where: $where
+            _set: { settled_id: $settlementId }
+        ) {
+            number_expenses: affected_rows
+            expenses: returning {
+              ...ExpenseFields
+            }
+        }
+    }

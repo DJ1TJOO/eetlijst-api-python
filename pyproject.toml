@@ -1,0 +1,74 @@
+[project]
+name = "eetlijst-python"
+version = "0.0.1"
+description = "Python rewrite of the Eetlijst GraphQL client"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "httpx>=0.28",
+  "ariadne-codegen>=0.18",
+]
+
+[project.optional-dependencies]
+dev = [
+  "mypy>=1.8.0",
+]
+
+[tool.ariadne-codegen]
+schema_path = "schema.graphql"
+queries_path = "src/services"
+target_package_name = "generated"
+target_package_path = "src"
+include_comments = "none"
+client_name = "GraphQlClient"
+
+[tool.ariadne-codegen.scalars.uuid]
+type = "str"
+
+[tool.ariadne-codegen.scalars.timestamptz]
+type = "datetime.datetime"
+deserialize = "iso8601.parse_date"
+
+[tool.pylint.messages_control]
+disable = [
+    "duplicate-code",
+    "too-many-arguments",
+    "too-many-positional-arguments",
+    "line-too-long",
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "missing-function-docstring",
+    "bare-except",
+    "too-many-branches",
+    "too-many-locals",
+    "too-few-public-methods",
+    "too-many-public-methods",
+    "fixme"
+]
+
+[tool.pylint.BASIC]
+typevar-rgx = "^_?[A-Z][a-zA-Z0-9_]*$"
+
+[tool.isort]
+profile = "black"
+sections = [
+    "FUTURE",
+    "STDLIB",
+    "THIRDPARTY",
+    "GENERATED",
+    "SRC",
+    "SERVICES",
+    "UTILS",
+    "FIRSTPARTY",
+    "LOCALFOLDER"
+]
+known_generated = ["src.generated"]
+known_src = ["src"]
+known_services = ["src.services"]
+known_utils = ["src.utils"]
+
+[tool.mypy]
+check_untyped_defs = true
+warn_redundant_casts = true
+disallow_any_generics = true
+disallow_any_unimported = true

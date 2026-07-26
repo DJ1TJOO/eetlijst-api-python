@@ -1,0 +1,11 @@
+mutation UpdateGroup(
+    $groupId: uuid!
+    $_set: eetschema_group_set_input!
+    ) {
+    group: update_eetschema_group_by_pk(
+        pk_columns: { id: $groupId }
+        _set: $_set
+    ) {
+        ...GroupFields
+    }
+}

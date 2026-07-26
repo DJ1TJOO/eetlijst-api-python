@@ -1,0 +1,10 @@
+mutation UpdateEvent(
+	$eventId: uuid!
+	$_set: eetschema_event_set_input!
+	$includeAttendees: Boolean = false
+	$includeExpenses: Boolean = false
+) {
+	update_eetschema_event_by_pk(pk_columns: { id: $eventId }, _set: $_set) {
+		...EventFields
+	}
+}

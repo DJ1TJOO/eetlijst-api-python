@@ -1,0 +1,40 @@
+# Environment variables (NEVER commit secrets!)
+.env
+.env.*
+!.env.example
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python byte-code & cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Testing & Type Checking
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.nox/
+.tox/
+
+# Package & Build artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS-generated files
+.DS_Store
+Thumbs.db

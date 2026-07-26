@@ -1,0 +1,5 @@
+query AutomaticEvents($groupId: uuid!, $date: String!) {
+	queryTodaysEvents(group_id: $groupId, date: $date) {
+		id
+	}
+}

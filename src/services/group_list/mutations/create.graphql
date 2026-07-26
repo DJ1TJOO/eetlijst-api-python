@@ -1,0 +1,13 @@
+mutation CreateListItem($groupId: uuid!, $text: String!, $active: Boolean = true, $checked: Boolean = false, $recipeId: uuid) {
+    insert_eetschema_list_one(
+        object: {
+            group_id: $groupId
+            text: $text
+            active: $active
+            checked: $checked
+            recipe_id: $recipeId
+        }
+    ) {
+        ...ItemFields
+    }
+}

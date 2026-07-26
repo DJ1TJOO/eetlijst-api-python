@@ -1,0 +1,14 @@
+query GetGroup($groupId: uuid!, $includeUsers: Boolean = false, $includeInactiveUsers: Boolean = false) {
+    eetschema_group_by_pk(id: $groupId) {
+        ...GroupFields
+        users_in_groups(where: {
+            _or: [
+              { active: { _eq: true } }
+              { active: { _neq: $includeInactiveUsers } }
+            ]
+          }
+          order_by: { order: asc }) @include(if: $includeUsers) {
+            ...UserInGroupFields
+        }
+    }
+}

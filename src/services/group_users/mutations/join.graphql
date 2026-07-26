@@ -1,0 +1,14 @@
+mutation JoinGroup(
+    $groupId: uuid!
+    $userId: String!
+    $inviteId: uuid!
+) {
+    joinGroup(
+        group_id: $groupId
+        user_id: $userId
+        invite_id: $inviteId
+    ) {
+        accepted
+        error
+    }
+}

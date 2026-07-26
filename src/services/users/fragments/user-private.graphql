@@ -1,0 +1,24 @@
+fragment UserFieldsPrivate on eetschema_user_private {
+    id
+    active
+    origin
+    last_seen
+
+    name
+    email
+    address
+    phone_nr
+    bank_account
+    allergies
+    birthday
+
+    profile_image
+    order_of_buttom_bar
+    default_landingpage
+    
+    wants_to_recieve_notifications
+    is_color_blind
+
+    created_at
+    updated_at
+}

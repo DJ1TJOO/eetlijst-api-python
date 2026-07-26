@@ -1,0 +1,29 @@
+fragment EventFields on eetschema_event {
+	id
+	group_id
+
+	open
+	start_date
+	closed_by
+	signup_deadline
+	changed_signup_time
+
+	name
+	description
+
+	user {
+		id
+		name
+	}
+
+	created_at
+	updated_at
+
+	linked_expenses @include(if: $includeExpenses) {
+		...ExpenseFields
+	}
+
+	event_attendees @include(if: $includeAttendees) {
+		...AttendanceFields
+	}
+}

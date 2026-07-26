@@ -1,0 +1,9 @@
+query SettlementExpenses($where: eetschema_expense_bool_exp, $order: [eetschema_expense_order_by!], $limit: Int) {
+    eetschema_expense(
+        where: $where
+        order_by: $order
+        limit: $limit
+    ) {
+        ...ExpenseFields
+    }
+}

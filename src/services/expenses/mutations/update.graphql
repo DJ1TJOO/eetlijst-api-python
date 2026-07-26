@@ -1,0 +1,21 @@
+mutation UpdateExpense($expenseId: uuid!, $_set: eetschema_expense_set_input!) {
+	update_eetschema_expense(where: { id: { _eq: $expenseId } }, _set: $_set) {
+		returning {
+			...ExpenseFields
+		}
+	}
+}
+
+mutation UpdateExpenseDistribution(
+	$expenseId: uuid!
+	$objects: [eetschema_expense_distribution_insert_input!]!
+) {
+	delete_eetschema_expense_distribution(
+		where: { expense_id: { _eq: $expenseId } }
+	) {
+		affected_rows
+	}
+	insert_eetschema_expense_distribution(objects: $objects) {
+		affected_rows
+	}
+}

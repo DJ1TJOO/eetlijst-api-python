@@ -1,0 +1,28 @@
+fragment ExpenseFields on eetschema_expense {
+	id
+	event_id
+	settled_id
+	description
+	payed_amount
+	deleted
+	settlement_expense_id
+	expense_distributions {
+		id
+		count
+		payed_amount
+		user {
+			id
+			name
+		}
+	}
+	payed_at
+	payed_by: payed_by_user {
+		id
+		name
+	}
+	updated_at
+	updated_by: updatedByUser {
+		id
+		name
+	}
+}

@@ -1,0 +1,12 @@
+mutation UpdateAttendance(
+	$eventId: uuid!
+	$userId: String!
+	$_set: eetschema_event_attendees_set_input!
+) {
+	update_eetschema_event_attendees_by_pk(
+		pk_columns: { event_id: $eventId, user_id: $userId }
+		_set: $_set
+	) {
+		...AttendanceFields
+	}
+}

@@ -1,0 +1,10 @@
+mutation CreateGroup($name: String!, $userId: String!) {
+    group: insert_eetschema_group_one(
+        object: {
+        name: $name
+        users_in_groups: { data: { user_id: $userId } }
+        }
+    ) {
+        ...GroupFields
+    }
+}

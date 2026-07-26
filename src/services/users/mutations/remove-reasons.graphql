@@ -1,0 +1,19 @@
+mutation RemoveAccount(
+    $user_id: String!
+    $reason_to_remove_account_selection: [String!] = ""
+    $reason_to_remove_account_selection_all_options: [String!] = ""
+    $reason_to_remove_account_text: String! = ""
+    ) {
+    update_eetschema_user_by_pk(
+        pk_columns: { id: $user_id }
+        _set: {
+        reason_to_remove_account_selection: $reason_to_remove_account_selection
+        reason_to_remove_account_selection_all_options: $reason_to_remove_account_selection_all_options
+        reason_to_remove_account_text: $reason_to_remove_account_text
+        }
+    ) {
+        reason_to_remove_account_text
+        reason_to_remove_account_selection
+        reason_to_remove_account_selection_all_options
+    }
+}

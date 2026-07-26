@@ -1,0 +1,12 @@
+mutation UpdateUserInGroup(
+    $groupId: uuid!
+    $userId: String!
+    $_set: eetschema_users_in_group_set_input!
+    ) {
+    update_eetschema_users_in_group_by_pk(
+        _set: $_set
+        pk_columns: { group_id: $groupId, user_id: $userId }
+    ) {
+        ...UserInGroupFields
+    }
+}

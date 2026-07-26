@@ -1,0 +1,20 @@
+fragment AttendanceFields on eetschema_event_attendees {
+	created_at
+	updated_at
+	comment
+	number_guests
+	status
+
+	linked_event {
+		id
+		name
+	}
+
+	user_in_group {
+		order
+		user {
+			id
+			name
+		}
+	}
+}
