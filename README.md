@@ -35,8 +35,6 @@ See Examples (./examples/) for more.
 ## What is Included
 
 - Service classes for app, events, expenses, groups, users, groups.users, groups.list, events.attendance, and expenses.settlements.
-- A complete GraphQL operation manifest at src/eetlijst/operations.graphql for ariadne-codegen.
-- Example scripts matching the TS examples.
 
 ## Development & Codegen
 
