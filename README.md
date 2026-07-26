@@ -1,45 +1,22 @@
-# Eetlijst Python
+# eetlijst-python
 
-This folder contains a Python rewrite of the TypeScript client in `src/`.
+A simple Python API client for Eetlijst.
 
-## What is included
+> [!NOTE]
+> This project is made for use in a student house, and will probably not be maintained.
+> Most of this Python port was converted from the TypeScript version (https://github.com/DJ1TJOO/eetlijst-api-ts) using Google Gemini.
 
-- A synchronous `eetlijst(...)` factory that mirrors the TS client shape.
-- Service classes for `app`, `events`, `expenses`, `groups`, `users`, `groups.users`, `groups.list`, `events.attendance`, and `expenses.settlements`.
-- A complete GraphQL operation manifest at `src/eetlijst/operations.graphql` for `ariadne-codegen`.
-- Example scripts matching the TS examples.
+## Usage
 
-## Codegen
+Create a virtual environment and install the package:
 
-The package is set up for `ariadne-codegen`. From inside `python/`, run:
+    python -m venv .venv
+    # Activate virtual environment (.venv\Scripts\Activate.ps1 on Windows or source .venv/bin/activate on Linux/macOS)
+    python -m pip install -e .
 
-```bash
-ariadne-codegen
-```
+The API key can be retrieved from the account page, under Developer API key (BETA), at https://v5.eetlijst.nl/account
 
-The config in `pyproject.toml` points the schema at the checked-in schema from the TypeScript project and writes generated code into `eetlijst_generated/`.
-
-## Local environment
-
-Create a virtual environment in `python/.venv` and activate it before installing anything:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-```
-
-Install the package and its dependencies in editable mode:
-
-```powershell
-python -m pip install -e .
-```
-
-The editable install also brings in `ariadne-codegen`, so code generation is available without extra steps.
-
-## Quick start
-
-```py
+```python
 import asyncio
 from eetlijst import Eetlijst
 
@@ -52,3 +29,23 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
+See Examples (./examples/) for more.
+
+## What is Included
+
+- Service classes for app, events, expenses, groups, users, groups.users, groups.list, events.attendance, and expenses.settlements.
+- A complete GraphQL operation manifest at src/eetlijst/operations.graphql for ariadne-codegen.
+- Example scripts matching the TS examples.
+
+## Development & Codegen
+
+This project uses ariadne-codegen (https://github.com/mirumee/ariadne-codegen) for GraphQL code generation.
+
+Run code generation:
+
+```
+ariadne-codegen
+```
+
+The configuration in pyproject.toml points to the GraphQL schema and outputs generated code into src/generated/.
