@@ -11,6 +11,7 @@ from eetlijst.generated.input_types import (
     eetschema_expense_set_input,
     uuid_comparison_exp,
 )
+
 from eetlijst.services.expenses.transformers import (
     transform_create_expense,
     transform_expense,
@@ -95,4 +96,3 @@ class Expenses:
     async def group_total(self, group_id: str):
         result = await self._client.group_total_expense(group_id=group_id)
         return transform_group_total_expense(result)
-

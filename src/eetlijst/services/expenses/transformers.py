@@ -1,10 +1,11 @@
 from typing import Optional, TypedDict
 
-from eetlijst.exceptions import EetlijstException
 from eetlijst.generated.create_expense import CreateExpense
 from eetlijst.generated.fragments import ExpenseFields
 from eetlijst.generated.group_total_expense import GroupTotalExpense
 from eetlijst.generated.update_expense import UpdateExpense
+
+from eetlijst.exceptions import EetlijstException
 
 
 class GroupTotalExpenseDict(TypedDict):

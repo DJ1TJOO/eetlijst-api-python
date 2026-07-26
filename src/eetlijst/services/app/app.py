@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 
-from eetlijst.exceptions import EetlijstException
 from eetlijst.generated import GraphQlClient
+
+from eetlijst.exceptions import EetlijstException
+
 from eetlijst.services.app.transformers import transform_app_status
 
 

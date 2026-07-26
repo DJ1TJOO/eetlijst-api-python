@@ -3,12 +3,14 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from eetlijst.exceptions import EetlijstException
 from eetlijst.generated.all_groups import AllGroups
 from eetlijst.generated.create_group import CreateGroup
 from eetlijst.generated.fragments import GroupFields, UserInGroupFields
 from eetlijst.generated.get_group import GetGroup
 from eetlijst.generated.update_group import UpdateGroup
+
+from eetlijst.exceptions import EetlijstException
+
 from eetlijst.services.users.transformers import UserResult, transform_user
 
 

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from eetlijst.generated import GraphQlClient, order_by
 from eetlijst.generated.input_types import (
@@ -9,8 +9,8 @@ from eetlijst.generated.input_types import (
     eetschema_users_in_group_bool_exp,
     eetschema_users_in_group_order_by,
 )
+
 from eetlijst.services.group_list import GroupList
-from eetlijst.services.group_users import GroupUsers
 from eetlijst.services.groups.transformers import (
     GroupResult,
     transform_all_groups,
@@ -18,6 +18,9 @@ from eetlijst.services.groups.transformers import (
     transform_get_group,
     transform_update_group,
 )
+
+if TYPE_CHECKING:
+    from eetlijst.services.group_users import GroupUsers
 
 
 @dataclass

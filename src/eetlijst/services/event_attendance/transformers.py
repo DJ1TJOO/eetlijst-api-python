@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Optional
 
-from eetlijst.exceptions import EetlijstException
 from eetlijst.generated.base_model import BaseModel
 from eetlijst.generated.enums import AttendanceStatus
 from eetlijst.generated.fragments import (
@@ -11,6 +10,8 @@ from eetlijst.generated.fragments import (
 )
 from eetlijst.generated.update_attendance import UpdateAttendance
 from eetlijst.generated.update_many_attendance import UpdateManyAttendance
+
+from eetlijst.exceptions import EetlijstException
 
 
 class Attendance(BaseModel):

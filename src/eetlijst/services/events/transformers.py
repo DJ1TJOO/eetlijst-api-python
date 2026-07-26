@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Optional
 
-from eetlijst.exceptions import EetlijstException
 from eetlijst.generated.automatic_events import (
     AutomaticEvents,
     AutomaticEventsQueryTodaysEvents,
@@ -13,6 +12,9 @@ from eetlijst.generated.fragments import (
     EventFieldsUser,
 )
 from eetlijst.generated.update_event import UpdateEvent
+
+from eetlijst.exceptions import EetlijstException
+
 from eetlijst.services.event_attendance.transformers import (
     Attendance,
     transform_attendance,

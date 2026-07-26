@@ -49,3 +49,17 @@ ariadne-codegen
 ```
 
 The configuration in pyproject.toml points to the GraphQL schema and outputs generated code into src/generated/.
+
+### Building
+
+To build the package locally, install the build tool first:
+
+```
+python -m pip install build
+```
+
+Build the package:
+
+```
+python -m build
+```

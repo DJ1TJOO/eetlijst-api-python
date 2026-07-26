@@ -11,6 +11,7 @@ from eetlijst.generated.input_types import (
     eetschema_users_in_group_updates,
     uuid_comparison_exp,
 )
+
 from eetlijst.services.group_users.transformers import (
     transform_all_users_in_group,
     transform_get_user_in_group,

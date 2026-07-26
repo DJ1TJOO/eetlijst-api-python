@@ -3,7 +3,6 @@ from typing import Optional
 
 from pydantic import BaseModel, ConfigDict
 
-from eetlijst.exceptions import EetlijstException
 from eetlijst.generated.create_settlement import CreateSettlement
 from eetlijst.generated.fragments import (
     ExpenseFields,
@@ -12,6 +11,9 @@ from eetlijst.generated.fragments import (
 )
 from eetlijst.generated.settle_unsettled_expenses import SettleUnsettledExpenses
 from eetlijst.generated.settlement_expenses import SettlementExpenses
+
+from eetlijst.exceptions import EetlijstException
+
 from eetlijst.services.expenses.transformers import transform_expense
 
 

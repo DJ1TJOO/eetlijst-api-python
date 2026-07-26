@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from eetlijst.exceptions import EetlijstException
 from eetlijst.generated import GraphQlClient
 from eetlijst.generated.input_types import (
     eetschema_list_bool_exp,
@@ -10,6 +9,9 @@ from eetlijst.generated.input_types import (
     eetschema_list_set_input,
     uuid_comparison_exp,
 )
+
+from eetlijst.exceptions import EetlijstException
+
 from eetlijst.services.group_list.transformers import (
     transform_create_list_item,
     transform_create_many_list_items,

@@ -1,6 +1,7 @@
 from typing import TypedDict
 
 from eetlijst.generated.fragments import ExpenseFieldsExpenseDistributionsUser
+
 from eetlijst.services.expenses.utils import UserBalance
 
 

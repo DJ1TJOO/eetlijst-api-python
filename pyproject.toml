@@ -3,15 +3,19 @@ name = "eetlijst-python"
 version = "0.0.1"
 description = "Python rewrite of the Eetlijst GraphQL client"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.14,<3.15"
 dependencies = [
   "httpx>=0.28",
-  "ariadne-codegen>=0.18",
+  "pydantic>=2.0.0",
 ]
 
 [project.optional-dependencies]
 dev = [
+  "ariadne-codegen>=0.18",
   "mypy>=1.8.0",
+  "black>=24.0",
+  "isort>=5.13",
+  "pylint>=3.0",
 ]
 
 [build-system]
@@ -33,6 +37,11 @@ type = "str"
 type = "datetime.datetime"
 deserialize = "iso8601.parse_date"
 
+[tool.pylint.main]
+ignore-paths = [
+    "src/eetlijst/generated"
+]
+
 [tool.pylint.messages_control]
 disable = [
     "duplicate-code",
@@ -53,8 +62,14 @@ disable = [
 [tool.pylint.BASIC]
 typevar-rgx = "^_?[A-Z][a-zA-Z0-9_]*$"
 
+[tool.black]
+exclude = "src/eetlijst/generated"
+
 [tool.isort]
 profile = "black"
+skip = [
+    "src/eetlijst/generated"
+]
 sections = [
     "FUTURE",
     "STDLIB",
@@ -66,12 +81,13 @@ sections = [
     "FIRSTPARTY",
     "LOCALFOLDER"
 ]
-known_generated = ["src.generated"]
-known_src = ["src"]
-known_services = ["src.services"]
-known_utils = ["src.utils"]
+known_generated = ["eetlijst.generated"]
+known_src = ["eetlijst"]
+known_services = ["eetlijst.services"]
+known_utils = ["eetlijst.utils"]
 
 [tool.mypy]
+exclude = "src/eetlijst/generated"
 check_untyped_defs = true
 warn_redundant_casts = true
 disallow_any_generics = true

@@ -1,6 +1,7 @@
 from typing import Optional
 
 from eetlijst.generated import GraphQlClient
+
 from eetlijst.services import (
     App,
     EventAttendance,

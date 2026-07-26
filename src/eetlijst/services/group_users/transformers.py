@@ -1,11 +1,13 @@
 ﻿from typing import Optional, TypedDict
 
-from eetlijst.exceptions import EetlijstException
 from eetlijst.generated.all_users_in_group import AllUsersInGroup
 from eetlijst.generated.get_user_in_group import GetUserInGroup
 from eetlijst.generated.join_group import JoinGroup
 from eetlijst.generated.update_user_in_group import UpdateUserInGroup
 from eetlijst.generated.update_users_in_group import UpdateUsersInGroup
+
+from eetlijst.exceptions import EetlijstException
+
 from eetlijst.services.groups.transformers import (
     UserInGroupResult,
     transform_user_in_group,

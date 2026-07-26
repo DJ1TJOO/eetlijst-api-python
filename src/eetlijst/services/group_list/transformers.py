@@ -1,10 +1,11 @@
 ﻿from typing import Optional
 
-from eetlijst.exceptions import EetlijstException
 from eetlijst.generated.create_list_item import CreateListItem
 from eetlijst.generated.create_many_list_items import CreateManyListItems
 from eetlijst.generated.fragments import ItemFields
 from eetlijst.generated.update_list_item import UpdateListItem
+
+from eetlijst.exceptions import EetlijstException
 
 
 def transform_list_item(item: Optional[ItemFields]) -> ItemFields:

@@ -8,7 +8,9 @@ from eetlijst.generated.input_types import (
     eetschema_event_set_input,
     uuid_comparison_exp,
 )
+
 from eetlijst.services.event_attendance import EventAttendance
+
 from eetlijst.utils.datetime import current_datetime, format_date
 
 from .transformers import (

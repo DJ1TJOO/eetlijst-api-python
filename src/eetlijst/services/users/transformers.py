@@ -3,7 +3,6 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from eetlijst.exceptions import EetlijstException
 from eetlijst.generated.fragments import UserFields, UserFieldsPrivate
 from eetlijst.generated.get_user import GetUser
 from eetlijst.generated.remove_account import (
@@ -11,6 +10,8 @@ from eetlijst.generated.remove_account import (
     RemoveAccountUpdateEetschemaUserByPk,
 )
 from eetlijst.generated.update_user import UpdateUser
+
+from eetlijst.exceptions import EetlijstException
 
 
 class CookPointsImportResult(BaseModel):
