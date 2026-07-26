@@ -12,6 +12,7 @@ from eetlijst.services import (
     GroupList,
     Groups,
     GroupUsers,
+    Me,
     Settlements,
     Users,
 )
@@ -57,3 +58,4 @@ class Eetlijst:
         self.expenses = Expenses(self._client, settlements)
 
         self.users = Users(self._client)
+        self.me = Me(api_key, self.users)

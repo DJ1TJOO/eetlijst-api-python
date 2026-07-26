@@ -5,5 +5,6 @@ from .expenses import Expenses
 from .group_list import GroupList
 from .group_users import GroupUsers
 from .groups import Groups
+from .me import Me
 from .settlements import Settlements
 from .users import Users
