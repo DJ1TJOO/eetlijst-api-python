@@ -31,13 +31,10 @@ class Eetlijst:
         ws_origin: Optional[str] = None,
         ws_connection_init_payload: Optional[dict[str, Any]] = None,
     ):
-        client_headers = dict(headers) if headers else {}
-        if api_key:
-            client_headers["Authorization"] = f"Bearer {api_key}"
-
+        self._api_key = api_key
         self._client = GraphQlClient(
             url=url or "https://api.eetlijst.nl/v1/graphql",
-            headers=client_headers,
+            headers=headers,
             http_client=http_client,
             ws_url=ws_url,
             ws_headers=ws_headers,
@@ -45,17 +42,17 @@ class Eetlijst:
             ws_connection_init_payload=ws_connection_init_payload,
         )
 
-        self.app = App(self._client)
+        self.app = App(self._client, self._api_key)
 
-        event_attendance = EventAttendance(self._client)
-        self.events = Events(self._client, event_attendance)
+        event_attendance = EventAttendance(self._client, self._api_key)
+        self.events = Events(self._client, self._api_key, event_attendance)
 
-        group_users = GroupUsers(self._client)
-        group_list = GroupList(self._client)
-        self.groups = Groups(self._client, group_users, group_list)
+        group_users = GroupUsers(self._client, self._api_key)
+        group_list = GroupList(self._client, self._api_key)
+        self.groups = Groups(self._client, self._api_key, group_users, group_list)
 
-        settlements = Settlements(self._client)
-        self.expenses = Expenses(self._client, settlements)
+        settlements = Settlements(self._client, self._api_key)
+        self.expenses = Expenses(self._client, self._api_key, settlements)
 
-        self.users = Users(self._client)
+        self.users = Users(self._client, self._api_key)
         self.me = Me(api_key, self.users)

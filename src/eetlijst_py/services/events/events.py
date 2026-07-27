@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from eetlijst_py.generated import GraphQlClient, order_by
+from eetlijst_py.generated import order_by
 from eetlijst_py.generated.input_types import (
     eetschema_event_bool_exp,
     eetschema_event_order_by,
@@ -9,6 +9,7 @@ from eetlijst_py.generated.input_types import (
     uuid_comparison_exp,
 )
 
+from eetlijst_py.services.base import BaseService
 from eetlijst_py.services.event_attendance import EventAttendance
 
 from eetlijst_py.utils.datetime import current_datetime, format_date
@@ -21,14 +22,14 @@ from .transformers import (
 
 
 @dataclass
-class Events:
-    _client: GraphQlClient
+class Events(BaseService):
     attendance: EventAttendance
 
     async def populate_dinners(self, group_id: str, date: datetime | str):
         result = await self._client.automatic_events(
             group_id,
             format_date(date),
+            headers=self._get_headers(),
         )
         return transform_automatic_events(result)
 
@@ -42,6 +43,7 @@ class Events:
             event_id,
             include_attendees,
             include_expenses,
+            headers=self._get_headers(),
         )
         return transform_event(result.eetschema_event_by_pk)
 
@@ -73,6 +75,7 @@ class Events:
             limit,
             include_attendees,
             include_expenses,
+            headers=self._get_headers(),
         )
         return [transform_event(event) for event in result.eetschema_event]
 
@@ -88,6 +91,7 @@ class Events:
             data,
             include_attendees,
             include_expenses,
+            headers=self._get_headers(),
         )
         return transform_update_event(result)
 

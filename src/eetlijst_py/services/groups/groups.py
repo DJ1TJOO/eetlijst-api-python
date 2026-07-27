@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, List, Optional
 
-from eetlijst_py.generated import GraphQlClient, order_by
+from eetlijst_py.generated import order_by
 from eetlijst_py.generated.input_types import (
     String_comparison_exp,
     eetschema_group_order_by,
@@ -10,6 +10,7 @@ from eetlijst_py.generated.input_types import (
     eetschema_users_in_group_order_by,
 )
 
+from eetlijst_py.services.base import BaseService
 from eetlijst_py.services.group_list import GroupList
 from eetlijst_py.services.groups.transformers import (
     GroupResult,
@@ -24,8 +25,7 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class Groups:
-    _client: GraphQlClient
+class Groups(BaseService):
     users: GroupUsers
     list: GroupList
 
@@ -34,7 +34,11 @@ class Groups:
         group_id: str,
         include_users: bool = False,
     ) -> GroupResult:
-        result = await self._client.get_group(group_id=group_id)
+        result = await self._client.get_group(
+            group_id=group_id,
+            headers=self._get_headers(),
+            headers=self._get_headers(),
+        )
         return transform_get_group(result, include_users=include_users)
 
     async def all(
@@ -66,12 +70,18 @@ class Groups:
             limit=limit,
             include_users=include_users,
             include_inactive_users=include_inactive_users,
+            headers=self._get_headers(),
         )
 
         return transform_all_groups(result, include_users=include_users)
 
     async def create(self, name: str, user_id: str) -> GroupResult:
-        result = await self._client.create_group(name=name, user_id=user_id)
+        result = await self._client.create_group(
+            name=name,
+            user_id=user_id,
+            headers=self._get_headers(),
+            headers=self._get_headers(),
+        )
         return transform_create_group(result)
 
     async def update(
@@ -80,5 +90,6 @@ class Groups:
         result = await self._client.update_group(
             group_id=group_id,
             set_=data,
+            headers=self._get_headers(),
         )
         return transform_update_group(result)

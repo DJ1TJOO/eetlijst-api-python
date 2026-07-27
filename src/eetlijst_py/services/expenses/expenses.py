@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from eetlijst_py.generated import GraphQlClient, order_by
+from eetlijst_py.generated import order_by
 from eetlijst_py.generated.input_types import (
     Boolean_comparison_exp,
     eetschema_expense_bool_exp,
@@ -12,6 +12,7 @@ from eetlijst_py.generated.input_types import (
     uuid_comparison_exp,
 )
 
+from eetlijst_py.services.base import BaseService
 from eetlijst_py.services.expenses.transformers import (
     transform_create_expense,
     transform_expense,
@@ -22,13 +23,13 @@ from eetlijst_py.services.settlements import Settlements
 
 
 @dataclass
-class Expenses:
-    _client: GraphQlClient
+class Expenses(BaseService):
     settlements: Settlements
 
     async def get(self, expense_id: str):
         result = await self._client.all_expenses(
-            where=eetschema_expense_bool_exp(id=uuid_comparison_exp(_eq=expense_id))
+            where=eetschema_expense_bool_exp(id=uuid_comparison_exp(_eq=expense_id)),
+            headers=self._get_headers(),
         )
 
         return transform_expense(result.eetschema_expense[0])
@@ -61,18 +62,20 @@ class Expenses:
             where=where_data,
             order=order_data,
             limit=limit,
+            headers=self._get_headers(),
         )
 
         return [transform_expense(expense) for expense in result.eetschema_expense]
 
     async def create(self, data: eetschema_expense_insert_input):
-        result = await self._client.create_expense(*data)
+        result = await self._client.create_expense(*data, headers=self._get_headers())
         return transform_create_expense(result)
 
     async def update(self, expense_id: str, data: eetschema_expense_set_input):
         result = await self._client.update_expense(
             expense_id=expense_id,
             set_=data,
+            headers=self._get_headers(),
         )
 
         return transform_update_expense(result)
@@ -85,6 +88,7 @@ class Expenses:
         await self._client.update_expense_distribution(
             expense_id=expense_id,
             objects=data,
+            headers=self._get_headers(),
         )
 
     async def delete(self, expense_id: str):
@@ -94,5 +98,9 @@ class Expenses:
         )
 
     async def group_total(self, group_id: str):
-        result = await self._client.group_total_expense(group_id=group_id)
+        result = await self._client.group_total_expense(
+            group_id=group_id,
+            headers=self._get_headers(),
+            headers=self._get_headers(),
+        )
         return transform_group_total_expense(result)

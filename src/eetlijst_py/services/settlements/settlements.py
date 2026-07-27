@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import List, Optional, TypedDict
 
-from eetlijst_py.generated import GraphQlClient, order_by
+from eetlijst_py.generated import order_by
 from eetlijst_py.generated.fragments import ExpenseFields
 from eetlijst_py.generated.input_types import (
     Boolean_comparison_exp,
@@ -16,6 +16,7 @@ from eetlijst_py.generated.input_types import (
     uuid_comparison_exp,
 )
 
+from eetlijst_py.services.base import BaseService
 from eetlijst_py.services.expenses.transformers import (
     transform_create_expense,
     transform_update_expense,
@@ -41,14 +42,14 @@ class SettleResult(TypedDict):
 
 
 @dataclass
-class Settlements:
-    _client: GraphQlClient
+class Settlements(BaseService):
 
     async def get(self, settlement_id: str) -> Optional[SettlementResult]:
         result = await self._client.all_settlements(
             where=eetschema_settlements_bool_exp(
-                id=uuid_comparison_exp(_eq=settlement_id)
-            )
+                id=uuid_comparison_exp(_eq=settlement_id),
+            ),
+            headers=self._get_headers(),
         )
 
         return transform_settlement(result.eetschema_settlements[0])
@@ -73,11 +74,16 @@ class Settlements:
             where=where_data,
             order=order_data,
             limit=limit,
+            headers=self._get_headers(),
         )
         return [transform_settlement(s) for s in result.eetschema_settlements]
 
     async def create(self, group_id: str) -> SettlementResult:
-        result = await self._client.create_settlement(group_id=group_id)
+        result = await self._client.create_settlement(
+            group_id=group_id,
+            headers=self._get_headers(),
+            headers=self._get_headers(),
+        )
         return transform_create_settlement(result)
 
     async def settle(
@@ -110,6 +116,7 @@ class Settlements:
         result = await self._client.settle_unsettled_expenses(
             settlement_id=settlement_id,
             where=where_data,
+            headers=self._get_headers(),
         )
         settled = transform_settle_unsettled_expenses(result)
 
@@ -141,12 +148,14 @@ class Settlements:
                     description=description,
                     settlement_expense_id=settlement_id,
                     data=distribution_data,
+                    headers=self._get_headers(),
                 )
                 created_expense = transform_create_expense(created_raw)
 
                 updated_raw = await self._client.update_expense(
                     expense_id=created_expense.id,
                     set_=eetschema_expense_set_input(settled_id=settlement_id),
+                    headers=self._get_headers(),
                 )
                 return transform_update_expense(updated_raw)
 
@@ -221,5 +230,6 @@ class Settlements:
         result = await self._client.settlement_expenses(
             where=where_data,
             order=order_data,
+            headers=self._get_headers(),
         )
         return transform_settlement_expenses(result)

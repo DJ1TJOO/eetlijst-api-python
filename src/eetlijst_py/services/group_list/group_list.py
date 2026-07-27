@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from eetlijst_py.generated import GraphQlClient
 from eetlijst_py.generated.input_types import (
     eetschema_list_bool_exp,
     eetschema_list_insert_input,
@@ -12,6 +11,7 @@ from eetlijst_py.generated.input_types import (
 
 from eetlijst_py.exceptions import EetlijstException
 
+from eetlijst_py.services.base import BaseService
 from eetlijst_py.services.group_list.transformers import (
     transform_create_list_item,
     transform_create_many_list_items,
@@ -21,12 +21,12 @@ from eetlijst_py.services.group_list.transformers import (
 
 
 @dataclass
-class GroupList:
-    _client: GraphQlClient
+class GroupList(BaseService):
 
     async def get(self, item_id: str):
         result = await self._client.list_items(
-            where=eetschema_list_bool_exp(id=uuid_comparison_exp(_eq=item_id))
+            where=eetschema_list_bool_exp(id=uuid_comparison_exp(_eq=item_id)),
+            headers=self._get_headers(),
         )
 
         return transform_list_item(result.eetschema_list[0])
@@ -53,22 +53,28 @@ class GroupList:
             where=where_data,
             order=order,
             limit=limit,
+            headers=self._get_headers(),
         )
 
         return [transform_list_item(item) for item in result.eetschema_list]
 
     async def create_item(self, data: eetschema_list_insert_input):
-        result = await self._client.create_list_item(*data)
+        result = await self._client.create_list_item(*data, headers=self._get_headers())
         return transform_create_list_item(result)
 
     async def create_many_items(self, items: list[eetschema_list_insert_input]):
-        result = await self._client.create_many_list_items(items=items)
+        result = await self._client.create_many_list_items(
+            items=items,
+            headers=self._get_headers(),
+            headers=self._get_headers(),
+        )
         return transform_create_many_list_items(result)
 
     async def update_item(self, item_id: str, data: eetschema_list_set_input):
         result = await self._client.update_list_item(
             id=item_id,
             set_=data,
+            headers=self._get_headers(),
         )
         return transform_update_list_item(result)
 

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional, TypedDict, Union
 
-from eetlijst_py.generated import GraphQlClient, order_by
+from eetlijst_py.generated import order_by
 from eetlijst_py.generated.input_types import (
     Boolean_comparison_exp,
     String_comparison_exp,
@@ -12,6 +12,7 @@ from eetlijst_py.generated.input_types import (
     uuid_comparison_exp,
 )
 
+from eetlijst_py.services.base import BaseService
 from eetlijst_py.services.group_users.transformers import (
     transform_all_users_in_group,
     transform_get_user_in_group,
@@ -27,12 +28,13 @@ class UserOrderItem(TypedDict):
 
 
 @dataclass
-class GroupUsers:
-    _client: GraphQlClient
+class GroupUsers(BaseService):
 
     async def get(self, group_id: str, user_id: str):
         result = await self._client.get_user_in_group(
-            group_id=group_id, user_id=user_id
+            group_id=group_id,
+            user_id=user_id,
+            headers=self._get_headers(),
         )
         return transform_get_user_in_group(result)
 
@@ -67,12 +69,19 @@ class GroupUsers:
             where=where_data,
             order=order_data,
             limit=limit,
+            headers=self._get_headers(),
         )
 
         return transform_all_users_in_group(result)
 
     async def add(self, group_id: str, user_id: str, invite_id: str):
-        result = await self._client.join_group(group_id, user_id, invite_id)
+        result = await self._client.join_group(
+            group_id,
+            user_id,
+            invite_id,
+            headers=self._get_headers(),
+            headers=self._get_headers(),
+        )
         return transform_join_group(result)
 
     async def update(
@@ -82,7 +91,10 @@ class GroupUsers:
         data: eetschema_users_in_group_set_input,
     ):
         result = await self._client.update_user_in_group(
-            group_id=group_id, user_id=user_id, set_=data
+            group_id=group_id,
+            user_id=user_id,
+            set_=data,
+            headers=self._get_headers(),
         )
 
         return transform_update_user_in_group(result)
@@ -91,7 +103,11 @@ class GroupUsers:
         self,
         updates: list[eetschema_users_in_group_updates],
     ):
-        result = await self._client.update_users_in_group(updates=updates)
+        result = await self._client.update_users_in_group(
+            updates=updates,
+            headers=self._get_headers(),
+            headers=self._get_headers(),
+        )
         return transform_update_users_in_group(result)
 
     async def remove(self, group_id: str, user_id: str):

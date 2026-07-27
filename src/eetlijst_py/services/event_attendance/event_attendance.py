@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-from eetlijst_py.generated import GraphQlClient
 from eetlijst_py.generated.base_model import UNSET, UnsetType
 from eetlijst_py.generated.enums import AttendanceStatus
 from eetlijst_py.generated.input_types import (
@@ -9,6 +8,8 @@ from eetlijst_py.generated.input_types import (
     eetschema_event_attendees_order_by,
     eetschema_event_attendees_set_input,
 )
+
+from eetlijst_py.services.base import BaseService
 
 from .transformers import (
     transform_attendance,
@@ -29,15 +30,19 @@ class EventAttendceUpdate(eetschema_event_attendees_set_input):
 
 
 @dataclass
-class EventAttendance:
-    _client: GraphQlClient
+class EventAttendance(BaseService):
 
     async def get(
         self,
         event_id: str,
         user_id: str,
     ):
-        result = await self._client.get_attendance(event_id, user_id)
+        result = await self._client.get_attendance(
+            event_id,
+            user_id,
+            headers=self._get_headers(),
+            headers=self._get_headers(),
+        )
         return transform_attendance(result.eetschema_event_attendees_by_pk)
 
     async def all(
@@ -46,7 +51,13 @@ class EventAttendance:
         order: list[eetschema_event_attendees_order_by] | UnsetType | None = UNSET,
         limit: int | UnsetType | None = UNSET,
     ):
-        result = await self._client.all_attendances(where, order, limit)
+        result = await self._client.all_attendances(
+            where,
+            order,
+            limit,
+            headers=self._get_headers(),
+            headers=self._get_headers(),
+        )
         return [
             transform_attendance(attendee)
             for attendee in result.eetschema_event_attendees
@@ -56,11 +67,21 @@ class EventAttendance:
         return await self.update_many([data])
 
     async def update(self, data: EventAttendceUpdate):
-        result = await self._client.update_attendance(data.event_id, data.user_id, data)
+        result = await self._client.update_attendance(
+            data.event_id,
+            data.user_id,
+            data,
+            headers=self._get_headers(),
+            headers=self._get_headers(),
+        )
         return transform_update_attendance(result)
 
     async def update_many(self, data: list[eetschema_event_attendees_insert_input]):
-        result = await self._client.update_many_attendance(data)
+        result = await self._client.update_many_attendance(
+            data,
+            headers=self._get_headers(),
+            headers=self._get_headers(),
+        )
         return transform_update_many_attendance(result)
 
     async def comment(self, user_id: str, event_id: str, comment: str | None):
