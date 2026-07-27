@@ -46,7 +46,7 @@ class GroupResult(BaseModel):
     invite_open: bool
     description: Optional[str]
     summary: list[GroupSummaryResult]
-    users: list[UserInGroupResult] = []
+    users: list[UserInGroupResult]
 
 
 def transform_group(

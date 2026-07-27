@@ -29,7 +29,7 @@ class UserResult(BaseModel):
     profile_image_url: Optional[str] = None
     order_of_buttom_bar: Optional[str] = None
     funnel_lead: Optional[str] = None
-    cook_points_imports: list[CookPointsImportResult] = []
+    cook_points_imports: list[CookPointsImportResult]
 
 
 class UserPrivateResult(UserFieldsPrivate):
