@@ -19,7 +19,6 @@ class Users(BaseService):
         result = await self._client.get_user(
             user_id=user_id,
             headers=self._get_headers(),
-            headers=self._get_headers(),
         )
         return transform_get_user(result)
 

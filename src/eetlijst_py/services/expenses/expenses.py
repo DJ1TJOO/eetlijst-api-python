@@ -101,6 +101,5 @@ class Expenses(BaseService):
         result = await self._client.group_total_expense(
             group_id=group_id,
             headers=self._get_headers(),
-            headers=self._get_headers(),
         )
         return transform_group_total_expense(result)

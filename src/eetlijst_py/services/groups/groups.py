@@ -37,7 +37,6 @@ class Groups(BaseService):
         result = await self._client.get_group(
             group_id=group_id,
             headers=self._get_headers(),
-            headers=self._get_headers(),
         )
         return transform_get_group(result, include_users=include_users)
 
@@ -79,7 +78,6 @@ class Groups(BaseService):
         result = await self._client.create_group(
             name=name,
             user_id=user_id,
-            headers=self._get_headers(),
             headers=self._get_headers(),
         )
         return transform_create_group(result)

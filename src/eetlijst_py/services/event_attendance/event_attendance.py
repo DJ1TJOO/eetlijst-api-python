@@ -41,7 +41,6 @@ class EventAttendance(BaseService):
             event_id,
             user_id,
             headers=self._get_headers(),
-            headers=self._get_headers(),
         )
         return transform_attendance(result.eetschema_event_attendees_by_pk)
 
@@ -55,7 +54,6 @@ class EventAttendance(BaseService):
             where,
             order,
             limit,
-            headers=self._get_headers(),
             headers=self._get_headers(),
         )
         return [
@@ -72,14 +70,12 @@ class EventAttendance(BaseService):
             data.user_id,
             data,
             headers=self._get_headers(),
-            headers=self._get_headers(),
         )
         return transform_update_attendance(result)
 
     async def update_many(self, data: list[eetschema_event_attendees_insert_input]):
         result = await self._client.update_many_attendance(
             data,
-            headers=self._get_headers(),
             headers=self._get_headers(),
         )
         return transform_update_many_attendance(result)

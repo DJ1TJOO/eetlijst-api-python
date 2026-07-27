@@ -66,7 +66,6 @@ class GroupList(BaseService):
         result = await self._client.create_many_list_items(
             items=items,
             headers=self._get_headers(),
-            headers=self._get_headers(),
         )
         return transform_create_many_list_items(result)
 

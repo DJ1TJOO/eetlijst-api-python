@@ -80,7 +80,6 @@ class GroupUsers(BaseService):
             user_id,
             invite_id,
             headers=self._get_headers(),
-            headers=self._get_headers(),
         )
         return transform_join_group(result)
 
@@ -105,7 +104,6 @@ class GroupUsers(BaseService):
     ):
         result = await self._client.update_users_in_group(
             updates=updates,
-            headers=self._get_headers(),
             headers=self._get_headers(),
         )
         return transform_update_users_in_group(result)
