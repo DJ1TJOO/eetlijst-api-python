@@ -1,8 +1,8 @@
 from datetime import datetime
+from enum import Enum
 from typing import Optional
 
 from eetlijst_py.generated.base_model import BaseModel
-from eetlijst_py.generated.enums import AttendanceStatus
 from eetlijst_py.generated.fragments import (
     AttendanceFields,
     AttendanceFieldsLinkedEvent,
@@ -12,6 +12,14 @@ from eetlijst_py.generated.update_attendance import UpdateAttendance
 from eetlijst_py.generated.update_many_attendance import UpdateManyAttendance
 
 from eetlijst_py.exceptions import EetlijstException
+
+
+class AttendanceStatus(str, Enum):
+    COOK = "cook"
+    EAT_ONLY = "eat_only"
+    GOT_GROCERIES = "got_groceries"
+    NOT_ATTENDING = "not_attending"
+    DONT_KNOW_YET = "dont_know_yet"
 
 
 class Attendance(BaseModel):

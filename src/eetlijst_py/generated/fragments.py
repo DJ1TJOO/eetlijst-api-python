@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import Any, Optional
 
 from .base_model import BaseModel
-from .enums import AttendanceStatus
 
 
 class AttendanceFields(BaseModel):
@@ -10,7 +9,7 @@ class AttendanceFields(BaseModel):
     updated_at: datetime
     comment: Optional[str]
     number_guests: int
-    status: AttendanceStatus
+    status: str
     linked_event: "AttendanceFieldsLinkedEvent"
     user_in_group: Optional["AttendanceFieldsUserInGroup"]
 
@@ -212,13 +211,13 @@ class UserInGroupFields(BaseModel):
     order: Optional[int]
     start_holliday: Optional[datetime]
     end_holliday: Optional[datetime]
-    monday: Optional[AttendanceStatus]
-    tuesday: Optional[AttendanceStatus]
-    wednesday: Optional[AttendanceStatus]
-    thursday: Optional[AttendanceStatus]
-    friday: Optional[AttendanceStatus]
-    saturday: Optional[AttendanceStatus]
-    sunday: Optional[AttendanceStatus]
+    monday: Optional[str]
+    tuesday: Optional[str]
+    wednesday: Optional[str]
+    thursday: Optional[str]
+    friday: Optional[str]
+    saturday: Optional[str]
+    sunday: Optional[str]
     user: "UserInGroupFieldsUser"
 
 

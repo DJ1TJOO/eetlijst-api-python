@@ -28,7 +28,6 @@ from .create_many_list_items import (
 )
 from .create_settlement import CreateSettlement, CreateSettlementSettlement
 from .enums import (
-    AttendanceStatus,
     ads_ads_select_column,
     ads_ads_targeting_select_column,
     ads_interaction_constraint,
@@ -152,7 +151,6 @@ from .group_total_expense import (
     GroupTotalExpenseEetschemaExpenseEetlijstImportAggregateAggregateSum,
 )
 from .input_types import (
-    AttendanceStatus_comparison_exp,
     Boolean_comparison_exp,
     Float_comparison_exp,
     Int_comparison_exp,
@@ -603,8 +601,6 @@ __all__ = [
     "AttendanceFieldsLinkedEvent",
     "AttendanceFieldsUserInGroup",
     "AttendanceFieldsUserInGroupUser",
-    "AttendanceStatus",
-    "AttendanceStatus_comparison_exp",
     "AutomaticEvents",
     "AutomaticEventsQueryTodaysEvents",
     "BaseModel",

@@ -1,13 +1,6 @@
 from enum import Enum
 
 
-class AttendanceStatus(str, Enum):
-    cook = "cook"
-    eat_only = "eat_only"
-    got_groceries = "got_groceries"
-    not_attending = "not_attending"
-
-
 class ads_ads_select_column(str, Enum):
     btn_text = "btn_text"
     description = "description"

@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 from eetlijst_py.generated.base_model import UNSET, UnsetType
-from eetlijst_py.generated.enums import AttendanceStatus
 from eetlijst_py.generated.input_types import (
     eetschema_event_attendees_bool_exp,
     eetschema_event_attendees_insert_input,
@@ -12,6 +11,7 @@ from eetlijst_py.generated.input_types import (
 from eetlijst_py.services.base import BaseService
 
 from .transformers import (
+    AttendanceStatus,
     transform_attendance,
     transform_update_attendance,
     transform_update_many_attendance,
@@ -89,9 +89,7 @@ class EventAttendance(BaseService):
             )
         )
 
-    async def status(
-        self, user_id: str, event_id: str, status: AttendanceStatus | None
-    ):
+    async def status(self, user_id: str, event_id: str, status: str | None):
         return await self.update(
             EventAttendceUpdate(
                 user_id=user_id,

@@ -5,7 +5,6 @@ from pydantic import Field
 
 from .base_model import BaseModel
 from .enums import (
-    AttendanceStatus,
     ads_interaction_constraint,
     ads_interaction_update_column,
     cursor_ordering,
@@ -46,28 +45,6 @@ from .enums import (
     recipes_select_column_recipes_aggregate_bool_exp_bool_or_arguments_columns,
     recipes_update_column,
 )
-
-
-class AttendanceStatus_comparison_exp(BaseModel):
-    eq: Optional[AttendanceStatus] = Field(alias="_eq", default=None)
-    gt: Optional[AttendanceStatus] = Field(alias="_gt", default=None)
-    gte: Optional[AttendanceStatus] = Field(alias="_gte", default=None)
-    ilike: Optional[AttendanceStatus] = Field(alias="_ilike", default=None)
-    in_: Optional[list[AttendanceStatus]] = Field(alias="_in", default=None)
-    iregex: Optional[AttendanceStatus] = Field(alias="_iregex", default=None)
-    is_null: Optional[bool] = Field(alias="_is_null", default=None)
-    like: Optional[AttendanceStatus] = Field(alias="_like", default=None)
-    lt: Optional[AttendanceStatus] = Field(alias="_lt", default=None)
-    lte: Optional[AttendanceStatus] = Field(alias="_lte", default=None)
-    neq: Optional[AttendanceStatus] = Field(alias="_neq", default=None)
-    nilike: Optional[AttendanceStatus] = Field(alias="_nilike", default=None)
-    nin: Optional[list[AttendanceStatus]] = Field(alias="_nin", default=None)
-    niregex: Optional[AttendanceStatus] = Field(alias="_niregex", default=None)
-    nlike: Optional[AttendanceStatus] = Field(alias="_nlike", default=None)
-    nregex: Optional[AttendanceStatus] = Field(alias="_nregex", default=None)
-    nsimilar: Optional[AttendanceStatus] = Field(alias="_nsimilar", default=None)
-    regex: Optional[AttendanceStatus] = Field(alias="_regex", default=None)
-    similar: Optional[AttendanceStatus] = Field(alias="_similar", default=None)
 
 
 class Boolean_comparison_exp(BaseModel):
@@ -717,7 +694,7 @@ class eetschema_event_attendees_bool_exp(BaseModel):
     event_id: Optional["uuid_comparison_exp"] = None
     linked_event: Optional["eetschema_event_bool_exp"] = None
     number_guests: Optional["Int_comparison_exp"] = None
-    status: Optional["AttendanceStatus_comparison_exp"] = None
+    status: Optional["String_comparison_exp"] = None
     updated_at: Optional["timestamptz_comparison_exp"] = None
     user_changed_status: Optional["Boolean_comparison_exp"] = None
     user_id: Optional["String_comparison_exp"] = None
@@ -737,7 +714,7 @@ class eetschema_event_attendees_insert_input(BaseModel):
     event_id: Optional[str] = None
     linked_event: Optional["eetschema_event_obj_rel_insert_input"] = None
     number_guests: Optional[int] = None
-    status: Optional[AttendanceStatus] = None
+    status: Optional[str] = None
     user_changed_status: Optional[bool] = None
     user_id: Optional[str] = None
     user_in_group: Optional["eetschema_users_in_group_obj_rel_insert_input"] = None
@@ -805,7 +782,7 @@ class eetschema_event_attendees_set_input(BaseModel):
 
     comment: Optional[str] = None
     number_guests: Optional[int] = None
-    status: Optional[AttendanceStatus] = None
+    status: Optional[str] = None
     updated_at: Optional[datetime] = None
     user_changed_status: Optional[bool] = None
     user_id: Optional[str] = None
@@ -845,7 +822,7 @@ class eetschema_event_attendees_stream_cursor_value_input(BaseModel):
     created_at: Optional[datetime] = None
     event_id: Optional[str] = None
     number_guests: Optional[int] = None
-    status: Optional[AttendanceStatus] = None
+    status: Optional[str] = None
     updated_at: Optional[datetime] = None
     user_changed_status: Optional[bool] = None
     user_id: Optional[str] = None
@@ -927,20 +904,20 @@ class eetschema_event_attendees_view_bool_exp(BaseModel):
     comment: Optional["String_comparison_exp"] = None
     event: Optional["eetschema_event_bool_exp"] = None
     event_id: Optional["uuid_comparison_exp"] = None
-    friday: Optional["AttendanceStatus_comparison_exp"] = None
+    friday: Optional["String_comparison_exp"] = None
     group: Optional["eetschema_group_bool_exp"] = None
     group_id: Optional["uuid_comparison_exp"] = None
-    monday: Optional["AttendanceStatus_comparison_exp"] = None
+    monday: Optional["String_comparison_exp"] = None
     number_guests: Optional["Int_comparison_exp"] = None
     order: Optional["Int_comparison_exp"] = None
-    saturday: Optional["AttendanceStatus_comparison_exp"] = None
-    status: Optional["AttendanceStatus_comparison_exp"] = None
-    sunday: Optional["AttendanceStatus_comparison_exp"] = None
-    thursday: Optional["AttendanceStatus_comparison_exp"] = None
-    tuesday: Optional["AttendanceStatus_comparison_exp"] = None
+    saturday: Optional["String_comparison_exp"] = None
+    status: Optional["String_comparison_exp"] = None
+    sunday: Optional["String_comparison_exp"] = None
+    thursday: Optional["String_comparison_exp"] = None
+    tuesday: Optional["String_comparison_exp"] = None
     user: Optional["eetschema_user_bool_exp"] = None
     user_id: Optional["String_comparison_exp"] = None
-    wednesday: Optional["AttendanceStatus_comparison_exp"] = None
+    wednesday: Optional["String_comparison_exp"] = None
 
 
 class eetschema_event_attendees_view_max_order_by(BaseModel):
@@ -1040,18 +1017,18 @@ class eetschema_event_attendees_view_stream_cursor_value_input(BaseModel):
     active: Optional[bool] = None
     comment: Optional[str] = None
     event_id: Optional[str] = None
-    friday: Optional[AttendanceStatus] = None
+    friday: Optional[str] = None
     group_id: Optional[str] = None
-    monday: Optional[AttendanceStatus] = None
+    monday: Optional[str] = None
     number_guests: Optional[int] = None
     order: Optional[int] = None
-    saturday: Optional[AttendanceStatus] = None
-    status: Optional[AttendanceStatus] = None
-    sunday: Optional[AttendanceStatus] = None
-    thursday: Optional[AttendanceStatus] = None
-    tuesday: Optional[AttendanceStatus] = None
+    saturday: Optional[str] = None
+    status: Optional[str] = None
+    sunday: Optional[str] = None
+    thursday: Optional[str] = None
+    tuesday: Optional[str] = None
     user_id: Optional[str] = None
-    wednesday: Optional[AttendanceStatus] = None
+    wednesday: Optional[str] = None
 
 
 class eetschema_event_attendees_view_sum_order_by(BaseModel):
@@ -1287,7 +1264,7 @@ class eetschema_event_statistics_bool_exp(BaseModel):
     event_start_date: Optional["timestamptz_comparison_exp"] = None
     group_id: Optional["uuid_comparison_exp"] = None
     number_guests: Optional["Int_comparison_exp"] = None
-    status: Optional["AttendanceStatus_comparison_exp"] = None
+    status: Optional["String_comparison_exp"] = None
     total_number_of_eaters: Optional["Int_comparison_exp"] = None
     user: Optional["eetschema_user_bool_exp"] = None
     user_id: Optional["String_comparison_exp"] = None
@@ -1536,7 +1513,7 @@ class eetschema_event_statistics_stream_cursor_value_input(BaseModel):
     event_start_date: Optional[datetime] = None
     group_id: Optional[str] = None
     number_guests: Optional[int] = None
-    status: Optional[AttendanceStatus] = None
+    status: Optional[str] = None
     total_number_of_eaters: Optional[int] = None
     user_id: Optional[str] = None
 
@@ -2622,7 +2599,7 @@ class eetschema_group_statistics_bool_exp(BaseModel):
     group_id: Optional["uuid_comparison_exp"] = None
     linked_group: Optional["eetschema_group_bool_exp"] = None
     number_guests: Optional["bigint_comparison_exp"] = None
-    status: Optional["AttendanceStatus_comparison_exp"] = None
+    status: Optional["String_comparison_exp"] = None
     user: Optional["eetschema_user_bool_exp"] = None
     user_id: Optional["String_comparison_exp"] = None
 
@@ -2654,7 +2631,7 @@ class eetschema_group_statistics_stream_cursor_value_input(BaseModel):
     count: Optional[Any] = None
     group_id: Optional[str] = None
     number_guests: Optional[Any] = None
-    status: Optional[AttendanceStatus] = None
+    status: Optional[str] = None
     user_id: Optional[str] = None
 
 
@@ -3755,20 +3732,20 @@ class eetschema_users_in_group_bool_exp(BaseModel):
     end_holliday: Optional["timestamptz_comparison_exp"] = None
     event: Optional["eetschema_event_bool_exp"] = None
     event_id: Optional["uuid_comparison_exp"] = None
-    friday: Optional["AttendanceStatus_comparison_exp"] = None
+    friday: Optional["String_comparison_exp"] = None
     group: Optional["eetschema_group_bool_exp"] = None
     group_id: Optional["uuid_comparison_exp"] = None
     group_stats_2: Optional["eetschema_group_statistics_2_bool_exp"] = None
-    monday: Optional["AttendanceStatus_comparison_exp"] = None
+    monday: Optional["String_comparison_exp"] = None
     order: Optional["Int_comparison_exp"] = None
-    saturday: Optional["AttendanceStatus_comparison_exp"] = None
+    saturday: Optional["String_comparison_exp"] = None
     start_holliday: Optional["timestamptz_comparison_exp"] = None
-    sunday: Optional["AttendanceStatus_comparison_exp"] = None
-    thursday: Optional["AttendanceStatus_comparison_exp"] = None
-    tuesday: Optional["AttendanceStatus_comparison_exp"] = None
+    sunday: Optional["String_comparison_exp"] = None
+    thursday: Optional["String_comparison_exp"] = None
+    tuesday: Optional["String_comparison_exp"] = None
     user: Optional["eetschema_user_bool_exp"] = None
     user_id: Optional["String_comparison_exp"] = None
-    wednesday: Optional["AttendanceStatus_comparison_exp"] = None
+    wednesday: Optional["String_comparison_exp"] = None
 
 
 class eetschema_users_in_group_inc_input(BaseModel):
@@ -3880,15 +3857,15 @@ class eetschema_users_in_group_set_input(BaseModel):
 
     active: Optional[bool] = None
     end_holliday: Optional[datetime] = None
-    friday: Optional[AttendanceStatus] = None
-    monday: Optional[AttendanceStatus] = None
+    friday: Optional[str] = None
+    monday: Optional[str] = None
     order: Optional[int] = None
-    saturday: Optional[AttendanceStatus] = None
+    saturday: Optional[str] = None
     start_holliday: Optional[datetime] = None
-    sunday: Optional[AttendanceStatus] = None
-    thursday: Optional[AttendanceStatus] = None
-    tuesday: Optional[AttendanceStatus] = None
-    wednesday: Optional[AttendanceStatus] = None
+    sunday: Optional[str] = None
+    thursday: Optional[str] = None
+    tuesday: Optional[str] = None
+    wednesday: Optional[str] = None
 
 
 class eetschema_users_in_group_stddev_order_by(BaseModel):
@@ -3924,17 +3901,17 @@ class eetschema_users_in_group_stream_cursor_value_input(BaseModel):
     active: Optional[bool] = None
     end_holliday: Optional[datetime] = None
     event_id: Optional[str] = None
-    friday: Optional[AttendanceStatus] = None
+    friday: Optional[str] = None
     group_id: Optional[str] = None
-    monday: Optional[AttendanceStatus] = None
+    monday: Optional[str] = None
     order: Optional[int] = None
-    saturday: Optional[AttendanceStatus] = None
+    saturday: Optional[str] = None
     start_holliday: Optional[datetime] = None
-    sunday: Optional[AttendanceStatus] = None
-    thursday: Optional[AttendanceStatus] = None
-    tuesday: Optional[AttendanceStatus] = None
+    sunday: Optional[str] = None
+    thursday: Optional[str] = None
+    tuesday: Optional[str] = None
     user_id: Optional[str] = None
-    wednesday: Optional[AttendanceStatus] = None
+    wednesday: Optional[str] = None
 
 
 class eetschema_users_in_group_sum_order_by(BaseModel):
