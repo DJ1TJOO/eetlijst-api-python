@@ -67,7 +67,7 @@ class Settlements:
             else eetschema_settlements_bool_exp(group_id=group_filter)
         )
 
-        order_data = order or [eetschema_settlements_order_by(created_at=order_by.desc)]
+        order_data = order or [eetschema_settlements_order_by(created_at=order_by.asc)]
 
         result = await self._client.all_settlements(
             where=where_data,
@@ -216,7 +216,7 @@ class Settlements:
                 settlement_expense_id=settlement_expense_filter,
             )
 
-        order_data = order or [eetschema_expense_order_by(created_at=order_by.desc)]
+        order_data = order or [eetschema_expense_order_by(created_at=order_by.asc)]
 
         result = await self._client.settlement_expenses(
             where=where_data,

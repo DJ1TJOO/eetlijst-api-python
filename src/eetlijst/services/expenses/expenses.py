@@ -55,7 +55,7 @@ class Expenses:
 
         order_data = order
         if order_data is None:
-            order_data = [eetschema_expense_order_by(created_at=order_by.desc)]
+            order_data = [eetschema_expense_order_by(created_at=order_by.asc)]
 
         result = await self._client.all_expenses(
             where=where_data,

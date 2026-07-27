@@ -65,7 +65,7 @@ class Events:
 
         order_data = order
         if order is None:
-            order_data = [eetschema_event_order_by(start_date=order_by.desc)]
+            order_data = [eetschema_event_order_by(start_date=order_by.asc)]
 
         result = await self._client.all_events(
             where_data,

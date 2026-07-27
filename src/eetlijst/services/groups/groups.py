@@ -56,7 +56,7 @@ class Groups:
 
         order_data = order or [
             eetschema_users_in_group_order_by(
-                group=eetschema_group_order_by(created_at=order_by.desc)
+                group=eetschema_group_order_by(created_at=order_by.asc)
             )
         ]
 
