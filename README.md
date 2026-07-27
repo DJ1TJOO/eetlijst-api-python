@@ -18,7 +18,7 @@ The API key can be retrieved from the account page, under Developer API key (BET
 
 ```python
 import asyncio
-from eetlijst import Eetlijst
+from eetlijst_py import Eetlijst
 
 eetlijst = Eetlijst("<API_KEY>")
 
