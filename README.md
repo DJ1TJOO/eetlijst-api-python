@@ -61,3 +61,9 @@ Build the package:
 ```
 python -m build
 ```
+
+Publish from local:
+
+```
+python -m twine upload dist/*
+```
