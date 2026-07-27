@@ -20,17 +20,18 @@ class GroupSummaryResult(BaseModel):
 
 
 class UserInGroupResult(BaseModel):
-    order: Optional[int] = None
-    start_holliday: Optional[datetime] = None
-    end_holliday: Optional[datetime] = None
-    monday: Optional[bool] = None
-    tuesday: Optional[bool] = None
-    wednesday: Optional[bool] = None
-    thursday: Optional[bool] = None
-    friday: Optional[bool] = None
-    saturday: Optional[bool] = None
-    sunday: Optional[bool] = None
-    user: Optional[UserResult] = None
+    active: bool
+    order: Optional[int]
+    start_holliday: Optional[datetime]
+    end_holliday: Optional[datetime]
+    monday: Optional[bool]
+    tuesday: Optional[bool]
+    wednesday: Optional[bool]
+    thursday: Optional[bool]
+    friday: Optional[bool]
+    saturday: Optional[bool]
+    sunday: Optional[bool]
+    user: UserResult
 
 
 class GroupResult(BaseModel):
@@ -78,7 +79,7 @@ def transform_user_in_group(
     if not user_in_group:
         raise EetlijstException("User in group not found")
 
-    user_data = transform_user(user_in_group.user) if user_in_group.user else None
+    user_data = transform_user(user_in_group.user)
     data = user_in_group.model_dump(exclude={"user"})
 
     return UserInGroupResult(
