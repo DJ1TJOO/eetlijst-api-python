@@ -22,13 +22,15 @@ class CookPointsImportResult(BaseModel):
 class UserResult(BaseModel):
     id: str
     name: str
-    origin: Optional[str] = None
-    email: Optional[str] = None
-    birthday: Optional[datetime] = None
-    profile_image: Optional[str] = None
-    profile_image_url: Optional[str] = None
-    order_of_buttom_bar: Optional[str] = None
-    funnel_lead: Optional[str] = None
+    origin: Optional[str]
+    email: Optional[str]
+    allergies: list[str]
+    birthday: Optional[datetime]
+    profile_image: Optional[str]
+    profile_image_url: Optional[str]
+    order_of_buttom_bar: Optional[list[str]]
+    wants_to_recieve_notifications: bool
+    funnel_lead: Optional[list[str]]
     cook_points_imports: list[CookPointsImportResult]
 
 
