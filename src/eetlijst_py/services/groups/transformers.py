@@ -104,7 +104,6 @@ def transform_update_group(result: UpdateGroup) -> GroupResult:
 
 def transform_all_groups(
     result: AllGroups,
-    include_users: bool = False,
 ) -> list[GroupResult]:
     transformed_groups: list[GroupResult] = []
     for user_in_group in result.eetschema_users_in_group:
@@ -113,7 +112,7 @@ def transform_all_groups(
 
         users = (
             [transform_user_in_group(u) for u in user_in_group.group.users_in_groups]
-            if include_users and user_in_group.group.users_in_groups
+            if user_in_group.group.users_in_groups
             else []
         )
 
@@ -124,7 +123,6 @@ def transform_all_groups(
 
 def transform_get_group(
     result: GetGroup,
-    include_users: bool = False,
 ) -> GroupResult:
     if not result.eetschema_group_by_pk:
         raise EetlijstException("Failed to get group")
@@ -134,7 +132,7 @@ def transform_get_group(
             transform_user_in_group(u)
             for u in result.eetschema_group_by_pk.users_in_groups
         ]
-        if include_users and result.eetschema_group_by_pk.users_in_groups
+        if result.eetschema_group_by_pk.users_in_groups
         else []
     )
 

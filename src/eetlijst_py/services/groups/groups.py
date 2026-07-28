@@ -33,12 +33,15 @@ class Groups(BaseService):
         self,
         group_id: str,
         include_users: bool = False,
+        include_inactive_users: bool = False,
     ) -> GroupResult:
         result = await self._client.get_group(
             group_id=group_id,
+            include_users=include_users,
+            include_inactive_users=include_inactive_users,
             headers=self._get_headers(),
         )
-        return transform_get_group(result, include_users=include_users)
+        return transform_get_group(result)
 
     async def all(
         self,
@@ -72,7 +75,7 @@ class Groups(BaseService):
             headers=self._get_headers(),
         )
 
-        return transform_all_groups(result, include_users=include_users)
+        return transform_all_groups(result)
 
     async def create(self, name: str, user_id: str) -> GroupResult:
         result = await self._client.create_group(
