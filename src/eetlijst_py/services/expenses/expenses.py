@@ -49,7 +49,7 @@ class Expenses(BaseService):
     async def get_subscription(self, expense_id: str):
         async for result in self._client.get_expense_subscription(
             id=expense_id,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result and result.eetschema_expense_by_pk:
                 yield transform_expense(result.eetschema_expense_by_pk)
@@ -103,7 +103,7 @@ class Expenses(BaseService):
             where=where_data,
             order=order_data,
             limit=limit,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result and result.eetschema_expense:
                 yield [
@@ -149,10 +149,12 @@ class Expenses(BaseService):
 
     async def group_total_subscription(self, group_id: str):
         expense_subscription = self._client.get_group_total_expense_subscription(
-            group_id=group_id, headers=self._get_ws_headers()
+            group_id=group_id,
+            additional_headers=self._get_ws_headers(),
         )
         import_subscription = self._client.get_group_total_expense_import_subscription(
-            group_id=group_id, headers=self._get_ws_headers()
+            group_id=group_id,
+            additional_headers=self._get_ws_headers(),
         )
 
         type QueuePayload = (

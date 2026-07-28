@@ -47,7 +47,7 @@ class GroupUsers(BaseService):
         async for result in self._client.get_user_in_group_subscription(
             group_id=group_id,
             user_id=user_id,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result:
                 yield transform_get_user_in_group(result)
@@ -107,7 +107,7 @@ class GroupUsers(BaseService):
             where=where_data,
             order=order_data,
             limit=limit,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result:
                 yield transform_all_users_in_group(result)

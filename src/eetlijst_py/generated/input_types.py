@@ -1,7 +1,9 @@
 from datetime import datetime
-from typing import Any, Optional
+from typing import Annotated, Any, Optional
 
-from pydantic import Field
+from pydantic import Field, PlainSerializer
+
+from eetlijst_py.utils.scalars import serialize_datetime
 
 from .base_model import BaseModel
 from .enums import (
@@ -405,9 +407,13 @@ class eetschema_app_status_stream_cursor_value_input(BaseModel):
     """Initial value of the column from where the streaming should start"""
 
     beta_online: Optional[bool] = None
-    created_at: Optional[datetime] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     id: Optional[str] = None
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
 
 
 class eetschema_cook_points_import_aggregate_order_by(BaseModel):
@@ -560,9 +566,13 @@ class eetschema_cook_points_import_stream_cursor_value_input(BaseModel):
 
     allowed_to_edit: Optional[bool] = None
     cook_points: Optional[float] = None
-    created_at: Optional[datetime] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     group_id: Optional[str] = None
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     user_id: Optional[str] = None
 
 
@@ -783,7 +793,9 @@ class eetschema_event_attendees_set_input(BaseModel):
     comment: Optional[str] = None
     number_guests: Optional[int] = None
     status: Optional[str] = None
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     user_changed_status: Optional[bool] = None
     user_id: Optional[str] = None
 
@@ -819,11 +831,15 @@ class eetschema_event_attendees_stream_cursor_value_input(BaseModel):
     """Initial value of the column from where the streaming should start"""
 
     comment: Optional[str] = None
-    created_at: Optional[datetime] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     event_id: Optional[str] = None
     number_guests: Optional[int] = None
     status: Optional[str] = None
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     user_changed_status: Optional[bool] = None
     user_id: Optional[str] = None
 
@@ -1096,14 +1112,18 @@ class eetschema_event_insert_input(BaseModel):
     closed_by: Optional[str] = None
     created_by: Optional[str] = None
     description: Optional[str] = None
-    end_date: Optional[datetime] = None
+    end_date: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = None
     event_attendees: Optional["eetschema_event_attendees_arr_rel_insert_input"] = None
     linked_expenses: Optional["eetschema_expense_arr_rel_insert_input"] = None
     linked_group: Optional["eetschema_group_obj_rel_insert_input"] = None
     name: Optional[str] = None
     open: Optional[bool] = None
-    signup_deadline: Optional[datetime] = None
-    start_date: Optional[datetime] = None
+    signup_deadline: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
+    start_date: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     type_: Optional[str] = Field(alias="type", default=None)
 
 
@@ -1202,11 +1222,15 @@ class eetschema_event_set_input(BaseModel):
     changed_signup_time: Optional[bool] = None
     closed_by: Optional[str] = None
     description: Optional[str] = None
-    end_date: Optional[datetime] = None
+    end_date: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = None
     name: Optional[str] = None
     open: Optional[bool] = None
-    signup_deadline: Optional[datetime] = None
-    start_date: Optional[datetime] = None
+    signup_deadline: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
+    start_date: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
 
 
 class eetschema_event_statistics_aggregate_bool_exp(BaseModel):
@@ -1417,7 +1441,9 @@ class eetschema_event_statistics_old_import_stream_cursor_input(BaseModel):
 class eetschema_event_statistics_old_import_stream_cursor_value_input(BaseModel):
     """Initial value of the column from where the streaming should start"""
 
-    event_start_date: Optional[datetime] = None
+    event_start_date: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
     group_id: Optional[str] = None
     num_cooked: Optional[int] = None
     num_does_groceries: Optional[int] = None
@@ -1510,7 +1536,9 @@ class eetschema_event_statistics_stream_cursor_value_input(BaseModel):
 
     cook_points: Optional[float] = None
     event_id: Optional[str] = None
-    event_start_date: Optional[datetime] = None
+    event_start_date: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
     group_id: Optional[str] = None
     number_guests: Optional[int] = None
     status: Optional[str] = None
@@ -1564,19 +1592,27 @@ class eetschema_event_stream_cursor_value_input(BaseModel):
 
     changed_signup_time: Optional[bool] = None
     closed_by: Optional[str] = None
-    created_at: Optional[datetime] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     created_by: Optional[str] = None
     description: Optional[str] = None
-    end_date: Optional[datetime] = None
+    end_date: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = None
     expense_id: Optional[str] = None
     group_id: Optional[str] = None
     id: Optional[str] = None
     name: Optional[str] = None
     open: Optional[bool] = None
-    signup_deadline: Optional[datetime] = None
-    start_date: Optional[datetime] = None
+    signup_deadline: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
+    start_date: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     type_: Optional[str] = Field(alias="type", default=None)
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
 
 
 class eetschema_event_updates(BaseModel):
@@ -1747,12 +1783,16 @@ class eetschema_expense_distribution_insert_input(BaseModel):
     '''input type for inserting data into table "eetschema.expense_distribution"'''
 
     count: Optional[int] = None
-    created_at: Optional[datetime] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     expense_id: Optional[str] = None
     expense_origin: Optional["eetschema_expense_obj_rel_insert_input"] = None
     id: Optional[str] = None
     payed_amount: Optional[int] = None
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     user_id: Optional[str] = None
 
 
@@ -1814,11 +1854,15 @@ class eetschema_expense_distribution_set_input(BaseModel):
     '''input type for updating data in table "eetschema.expense_distribution"'''
 
     count: Optional[int] = None
-    created_at: Optional[datetime] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     expense_id: Optional[str] = None
     id: Optional[str] = None
     payed_amount: Optional[int] = None
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     user_id: Optional[str] = None
 
 
@@ -1856,11 +1900,15 @@ class eetschema_expense_distribution_stream_cursor_value_input(BaseModel):
     """Initial value of the column from where the streaming should start"""
 
     count: Optional[int] = None
-    created_at: Optional[datetime] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     expense_id: Optional[str] = None
     id: Optional[str] = None
     payed_amount: Optional[int] = None
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     user_id: Optional[str] = None
 
 
@@ -1965,7 +2013,7 @@ class eetschema_expense_insert_input(BaseModel):
     group_id: Optional[str] = None
     linked_event: Optional["eetschema_event_obj_rel_insert_input"] = None
     payed_amount: Optional[int] = None
-    payed_at: Optional[datetime] = None
+    payed_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = None
     payed_by: Optional[str] = None
     settlement: Optional["eetschema_settlements_obj_rel_insert_input"] = None
     settlement_expense_id: Optional[str] = None
@@ -2069,7 +2117,7 @@ class eetschema_expense_set_input(BaseModel):
     description: Optional[str] = None
     issued_by: Optional[str] = None
     payed_amount: Optional[int] = None
-    payed_at: Optional[datetime] = None
+    payed_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = None
     payed_by: Optional[str] = None
     settled_id: Optional[str] = None
     settlement_expense_id: Optional[str] = None
@@ -2106,7 +2154,9 @@ class eetschema_expense_stream_cursor_input(BaseModel):
 class eetschema_expense_stream_cursor_value_input(BaseModel):
     """Initial value of the column from where the streaming should start"""
 
-    created_at: Optional[datetime] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     deleted: Optional[bool] = None
     description: Optional[str] = None
     event_id: Optional[str] = None
@@ -2114,11 +2164,13 @@ class eetschema_expense_stream_cursor_value_input(BaseModel):
     id: Optional[str] = None
     issued_by: Optional[str] = None
     payed_amount: Optional[int] = None
-    payed_at: Optional[datetime] = None
+    payed_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = None
     payed_by: Optional[str] = None
     settled_id: Optional[str] = None
     settlement_expense_id: Optional[str] = None
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     updated_by: Optional[str] = None
 
 
@@ -2223,8 +2275,12 @@ class eetschema_group_insert_input(BaseModel):
     expenses: Optional["eetschema_expense_arr_rel_insert_input"] = None
     lists: Optional["eetschema_list_arr_rel_insert_input"] = None
     name: Optional[str] = None
-    statistics_end_date: Optional[datetime] = None
-    statistics_start_date: Optional[datetime] = None
+    statistics_end_date: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
+    statistics_start_date: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
     users_in_groups: Optional["eetschema_users_in_group_arr_rel_insert_input"] = None
 
 
@@ -2371,12 +2427,18 @@ class eetschema_group_set_input(BaseModel):
     '''input type for updating data in table "eetschema.group"'''
 
     beta: Optional[bool] = None
-    default_close_time: Optional[datetime] = None
+    default_close_time: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
     description: Optional[str] = None
     invite_uuid: Optional[str] = None
     name: Optional[str] = None
-    statistics_end_date: Optional[datetime] = None
-    statistics_start_date: Optional[datetime] = None
+    statistics_end_date: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
+    statistics_start_date: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
 
 
 class eetschema_group_statistics_2_aggregate_order_by(BaseModel):
@@ -2669,9 +2731,15 @@ class eetschema_group_stream_cursor_value_input(BaseModel):
     address: Optional[str] = None
     beta: Optional[bool] = None
     city: Optional[str] = None
-    created_at: Optional[datetime] = None
-    created_at_eetlijst: Optional[datetime] = None
-    default_close_time: Optional[datetime] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
+    created_at_eetlijst: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
+    default_close_time: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
     default_status: Optional[str] = None
     description: Optional[str] = None
     email: Optional[str] = None
@@ -2681,9 +2749,15 @@ class eetschema_group_stream_cursor_value_input(BaseModel):
     login_name: Optional[str] = None
     name: Optional[str] = None
     pincode: Optional[int] = None
-    statistics_end_date: Optional[datetime] = None
-    statistics_start_date: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
+    statistics_end_date: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
+    statistics_start_date: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
 
 
 class eetschema_group_sum_order_by(BaseModel):
@@ -2963,12 +3037,16 @@ class eetschema_list_stream_cursor_value_input(BaseModel):
 
     active: Optional[bool] = None
     checked: Optional[bool] = None
-    created_at: Optional[datetime] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     group_id: Optional[str] = None
     id: Optional[str] = None
     recipe_id: Optional[str] = None
     text: Optional[str] = None
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
 
 
 class eetschema_list_updates(BaseModel):
@@ -3017,7 +3095,9 @@ class eetschema_notification_bool_exp(BaseModel):
 class eetschema_notification_insert_input(BaseModel):
     '''input type for inserting data into table "eetschema.notification"'''
 
-    timestamp: Optional[datetime] = Field(alias="Timestamp", default=None)
+    timestamp: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        Field(alias="Timestamp", default=None)
+    )
     body: Optional[str] = None
     device: Optional[str] = None
     device_token: Optional[str] = None
@@ -3127,14 +3207,18 @@ class eetschema_notification_logs_stream_cursor_value_input(BaseModel):
     """Initial value of the column from where the streaming should start"""
 
     body: Optional[str] = None
-    created_at: Optional[datetime] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     data: Optional[Any] = None
     device_token: Optional[str] = None
     id: Optional[str] = None
     opened_by_user: Optional[bool] = None
     send_by: Optional[str] = None
     title: Optional[str] = None
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     user_id: Optional[str] = None
 
 
@@ -3234,15 +3318,21 @@ class eetschema_notification_stream_cursor_input(BaseModel):
 class eetschema_notification_stream_cursor_value_input(BaseModel):
     """Initial value of the column from where the streaming should start"""
 
-    timestamp: Optional[datetime] = Field(alias="Timestamp", default=None)
+    timestamp: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        Field(alias="Timestamp", default=None)
+    )
     body: Optional[str] = None
-    created_at: Optional[datetime] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     device: Optional[str] = None
     device_token: Optional[str] = None
     id: Optional[str] = None
     platform: Optional[str] = None
     title: Optional[str] = None
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     user_id: Optional[str] = None
     wants_to_recieve: Optional[bool] = None
 
@@ -3356,11 +3446,15 @@ class eetschema_settlements_stream_cursor_input(BaseModel):
 class eetschema_settlements_stream_cursor_value_input(BaseModel):
     """Initial value of the column from where the streaming should start"""
 
-    created_at: Optional[datetime] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     created_by: Optional[str] = None
     group_id: Optional[str] = None
     id: Optional[str] = None
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
 
 
 class eetschema_user_bool_exp(BaseModel):
@@ -3600,20 +3694,24 @@ class eetschema_user_private_stream_cursor_value_input(BaseModel):
     alias: Optional[str] = None
     allergies: Optional[list[str]] = None
     bank_account: Optional[str] = None
-    birthday: Optional[datetime] = None
-    created_at: Optional[datetime] = None
+    birthday: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     default_landingpage: Optional[str] = None
     email: Optional[str] = None
     id: Optional[str] = None
     is_color_blind: Optional[bool] = None
-    last_seen: Optional[datetime] = None
+    last_seen: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = None
     name: Optional[str] = None
     old_id: Optional[str] = None
     order_of_buttom_bar: Optional[list[str]] = None
     origin: Optional[str] = None
     phone_nr: Optional[str] = None
     profile_image: Optional[str] = None
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     wants_to_recieve_notifications: Optional[bool] = None
 
 
@@ -3634,7 +3732,7 @@ class eetschema_user_set_input(BaseModel):
     alias: Optional[str] = None
     allergies: Optional[list[str]] = None
     bank_account: Optional[str] = None
-    birthday: Optional[datetime] = None
+    birthday: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = None
     default_landingpage: Optional[str] = None
     default_language: Optional[str] = None
     default_screen: Optional[str] = None
@@ -3664,7 +3762,7 @@ class eetschema_user_stream_cursor_value_input(BaseModel):
 
     alias: Optional[str] = None
     allergies: Optional[list[str]] = None
-    birthday: Optional[datetime] = None
+    birthday: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = None
     default_language: Optional[str] = None
     email: Optional[str] = None
     funnel_lead: Optional[list[str]] = None
@@ -3856,12 +3954,16 @@ class eetschema_users_in_group_set_input(BaseModel):
     '''input type for updating data in table "eetschema.users_in_group"'''
 
     active: Optional[bool] = None
-    end_holliday: Optional[datetime] = None
+    end_holliday: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     friday: Optional[str] = None
     monday: Optional[str] = None
     order: Optional[int] = None
     saturday: Optional[str] = None
-    start_holliday: Optional[datetime] = None
+    start_holliday: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
     sunday: Optional[str] = None
     thursday: Optional[str] = None
     tuesday: Optional[str] = None
@@ -3899,14 +4001,18 @@ class eetschema_users_in_group_stream_cursor_value_input(BaseModel):
     """Initial value of the column from where the streaming should start"""
 
     active: Optional[bool] = None
-    end_holliday: Optional[datetime] = None
+    end_holliday: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     event_id: Optional[str] = None
     friday: Optional[str] = None
     group_id: Optional[str] = None
     monday: Optional[str] = None
     order: Optional[int] = None
     saturday: Optional[str] = None
-    start_holliday: Optional[datetime] = None
+    start_holliday: Optional[
+        Annotated[datetime, PlainSerializer(serialize_datetime)]
+    ] = None
     sunday: Optional[str] = None
     thursday: Optional[str] = None
     tuesday: Optional[str] = None
@@ -4420,7 +4526,9 @@ class recipes_stream_cursor_value_input(BaseModel):
 
     cook_time: Optional[int] = None
     course_category: Optional[str] = None
-    created_at: Optional[datetime] = None
+    created_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
     description: Optional[str] = None
     id: Optional[str] = None
     image_url: Optional[str] = None
@@ -4436,7 +4544,9 @@ class recipes_stream_cursor_value_input(BaseModel):
     servings: Optional[int] = None
     title: Optional[str] = None
     total_time: Optional[int] = None
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = (
+        None
+    )
 
 
 class recipes_sum_order_by(BaseModel):
@@ -4487,15 +4597,31 @@ class recipes_variance_order_by(BaseModel):
 class timestamptz_comparison_exp(BaseModel):
     """Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'."""
 
-    eq: Optional[datetime] = Field(alias="_eq", default=None)
-    gt: Optional[datetime] = Field(alias="_gt", default=None)
-    gte: Optional[datetime] = Field(alias="_gte", default=None)
-    in_: Optional[list[datetime]] = Field(alias="_in", default=None)
+    eq: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = Field(
+        alias="_eq", default=None
+    )
+    gt: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = Field(
+        alias="_gt", default=None
+    )
+    gte: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = Field(
+        alias="_gte", default=None
+    )
+    in_: Optional[list[Annotated[datetime, PlainSerializer(serialize_datetime)]]] = (
+        Field(alias="_in", default=None)
+    )
     is_null: Optional[bool] = Field(alias="_is_null", default=None)
-    lt: Optional[datetime] = Field(alias="_lt", default=None)
-    lte: Optional[datetime] = Field(alias="_lte", default=None)
-    neq: Optional[datetime] = Field(alias="_neq", default=None)
-    nin: Optional[list[datetime]] = Field(alias="_nin", default=None)
+    lt: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = Field(
+        alias="_lt", default=None
+    )
+    lte: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = Field(
+        alias="_lte", default=None
+    )
+    neq: Optional[Annotated[datetime, PlainSerializer(serialize_datetime)]] = Field(
+        alias="_neq", default=None
+    )
+    nin: Optional[list[Annotated[datetime, PlainSerializer(serialize_datetime)]]] = (
+        Field(alias="_nin", default=None)
+    )
 
 
 class uuid_comparison_exp(BaseModel):

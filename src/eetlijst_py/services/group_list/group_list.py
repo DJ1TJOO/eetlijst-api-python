@@ -38,7 +38,7 @@ class GroupList(BaseService):
     async def get_subscription(self, item_id: str):
         async for result in self._client.get_list_item_subscription(
             id=item_id,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result and result.eetschema_list_by_pk:
                 yield transform_list_item(result.eetschema_list_by_pk)
@@ -82,7 +82,7 @@ class GroupList(BaseService):
             where=where_data,
             order=order,
             limit=limit,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result and result.eetschema_list:
                 yield [transform_list_item(item) for item in result.eetschema_list]

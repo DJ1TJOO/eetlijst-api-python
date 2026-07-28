@@ -2,6 +2,8 @@ from collections.abc import AsyncIterator
 from datetime import datetime
 from typing import Any, Optional, Union
 
+from eetlijst_py.utils.scalars import serialize_datetime
+
 from .all_attendances import AllAttendances
 from .all_attendances_subscription import AllAttendancesSubscription
 from .all_events import AllEvents
@@ -968,7 +970,7 @@ class GraphQlClient(AsyncBaseClient):
             "data": data,
             "description": description,
             "payedAmount": payed_amount,
-            "payedAt": payed_at,
+            "payedAt": serialize_datetime(payed_at),
             "eventId": event_id,
             "settlementExpenseId": settlement_expense_id,
         }

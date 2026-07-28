@@ -37,7 +37,7 @@ class EventAttendance(BaseService):
         async for result in self._client.get_attendance_subscription(
             event_id,
             user_id,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result and result.eetschema_event_attendees_by_pk:
                 yield transform_attendance(result.eetschema_event_attendees_by_pk)
@@ -69,7 +69,7 @@ class EventAttendance(BaseService):
             where,
             order,
             limit,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result and result.eetschema_event_attendees:
                 yield [

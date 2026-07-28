@@ -55,7 +55,7 @@ class Settlements(BaseService):
     async def get_subscription(self, settlement_id: str):
         async for result in self._client.get_settlement_subscription(
             id=settlement_id,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result and result.eetschema_settlements_by_pk:
                 yield transform_settlement(result.eetschema_settlements_by_pk)
@@ -108,7 +108,7 @@ class Settlements(BaseService):
             where=where_data,
             order=order_data,
             limit=limit,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result and result.eetschema_settlements:
                 yield [transform_settlement(s) for s in result.eetschema_settlements]
@@ -316,7 +316,7 @@ class Settlements(BaseService):
             where=where_data,
             order=order_data,
             limit=limit,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result:
                 yield transform_settlement_expenses(result)

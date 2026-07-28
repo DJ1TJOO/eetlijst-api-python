@@ -56,7 +56,7 @@ class Groups(BaseService):
             group_id=group_id,
             include_users=include_users,
             include_inactive_users=include_inactive_users,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result:
                 yield transform_get_group(result)
@@ -116,7 +116,7 @@ class Groups(BaseService):
             limit=limit,
             include_users=include_users,
             include_inactive_users=include_inactive_users,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result:
                 yield transform_all_groups(result)

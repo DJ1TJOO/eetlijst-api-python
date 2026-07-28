@@ -25,7 +25,7 @@ class Users(BaseService):
     async def get_subscription(self, user_id: str):
         async for result in self._client.get_user_subscription(
             user_id=user_id,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             yield transform_get_user(result)
 

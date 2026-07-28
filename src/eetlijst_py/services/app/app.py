@@ -14,7 +14,7 @@ class App(BaseService):
 
     async def status_subscription(self):
         async for result in self._client.get_app_status_subscription(
-            headers=self._get_ws_headers()
+            additional_headers=self._get_ws_headers(),
         ):
             if result and result.eetschema_app_status:
                 yield transform_app_status(result)

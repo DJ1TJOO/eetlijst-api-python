@@ -41,6 +41,7 @@ type = "str"
 
 [tool.ariadne-codegen.scalars.timestamptz]
 type = "datetime.datetime"
+serialize = "eetlijst_py.utils.scalars.serialize_datetime"
 deserialize = "iso8601.parse_date"
 
 [tool.pylint.main]

@@ -60,7 +60,7 @@ class Events(BaseService):
             event_id,
             include_attendees,
             include_expenses,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result and result.eetschema_event_by_pk:
                 yield transform_event(result.eetschema_event_by_pk)
@@ -119,7 +119,7 @@ class Events(BaseService):
             limit,
             include_attendees,
             include_expenses,
-            headers=self._get_ws_headers(),
+            additional_headers=self._get_ws_headers(),
         ):
             if result and result.eetschema_event:
                 yield [transform_event(event) for event in result.eetschema_event]
