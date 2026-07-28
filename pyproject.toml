@@ -1,6 +1,6 @@
 [project]
 name = "eetlijst-python"
-version = "0.0.15"
+version = "0.0.16"
 description = "Python rewrite of the Eetlijst GraphQL client"
 readme = "README.md"
 requires-python = ">=3.14,<3.15"
@@ -21,6 +21,12 @@ dev = [
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+eetlijst_py = ["py.typed"]
 
 [tool.ariadne-codegen]
 schema_path = "schema.graphql"
