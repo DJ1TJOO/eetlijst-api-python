@@ -88,7 +88,9 @@ class GroupList(BaseService):
                 yield [transform_list_item(item) for item in result.eetschema_list]
 
     async def create_item(self, data: CreateListItem):
-        result = await self._client.create_list_item(*data, headers=self._get_headers())
+        result = await self._client.create_list_item(
+            **data.model_dump(exclude_unset=True), headers=self._get_headers()
+        )
         return transform_create_list_item(result)
 
     async def create_many_items(self, items: list[CreateListItem]):

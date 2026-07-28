@@ -111,7 +111,9 @@ class Expenses(BaseService):
                 ]
 
     async def create(self, data: CreateExpense):
-        result = await self._client.create_expense(*data, headers=self._get_headers())
+        result = await self._client.create_expense(
+            **data.model_dump(exclude_unset=True), headers=self._get_headers()
+        )
         return transform_create_expense(result)
 
     async def update(self, expense_id: str, data: UpdateExpense):
