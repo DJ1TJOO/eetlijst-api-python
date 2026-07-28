@@ -11,6 +11,9 @@ from eetlijst_py.generated.fragments import (
 )
 from eetlijst_py.generated.settle_unsettled_expenses import SettleUnsettledExpenses
 from eetlijst_py.generated.settlement_expenses import SettlementExpenses
+from eetlijst_py.generated.settlement_expenses_subscription import (
+    SettlementExpensesSubscription,
+)
 
 from eetlijst_py.exceptions import EetlijstException
 
@@ -91,5 +94,7 @@ def transform_settle_unsettled_expenses(
     return SettleUnsettledExpensesResult(**data)
 
 
-def transform_settlement_expenses(result: SettlementExpenses):
+def transform_settlement_expenses(
+    result: SettlementExpenses | SettlementExpensesSubscription,
+):
     return [transform_expense(expense) for expense in result.eetschema_expense]

@@ -36,7 +36,7 @@ class Eetlijst:
             url=url or "https://api.eetlijst.nl/v1/graphql",
             headers=headers,
             http_client=http_client,
-            ws_url=ws_url,
+            ws_url=ws_url or "wss://api.eetlijst.nl/v1/graphql",
             ws_headers=ws_headers,
             ws_origin=ws_origin,
             ws_connection_init_payload=ws_connection_init_payload,

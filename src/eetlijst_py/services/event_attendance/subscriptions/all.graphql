@@ -1,0 +1,9 @@
+subscription AllAttendancesSubscription(
+	$where: eetschema_event_attendees_bool_exp
+	$order: [eetschema_event_attendees_order_by!]
+	$limit: Int
+) {
+	eetschema_event_attendees(where: $where, order_by: $order, limit: $limit) {
+		...AttendanceFields
+	}
+}

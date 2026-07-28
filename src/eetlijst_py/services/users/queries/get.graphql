@@ -1,5 +1,5 @@
 query GetUser($userId: String!) {
-    eetschema_user_private(where: { id: { _eq: $userId } }) {
-        ...UserFieldsPrivate
-    }
+	eetschema_user_private(where: { id: { _eq: $userId } }) {
+		...UserFieldsPrivate
+	}
 }

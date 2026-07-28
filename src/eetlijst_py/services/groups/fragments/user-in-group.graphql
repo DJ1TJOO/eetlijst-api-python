@@ -1,18 +1,18 @@
 fragment UserInGroupFields on eetschema_users_in_group {
-    active
-    order
-    start_holliday
-    end_holliday
+	active
+	order
+	start_holliday
+	end_holliday
 
-    monday
-    tuesday
-    wednesday
-    thursday
-    friday
-    saturday
-    sunday
+	monday
+	tuesday
+	wednesday
+	thursday
+	friday
+	saturday
+	sunday
 
-    user {
-      ...UserFields
-    }
+	user {
+		...UserFields
+	}
 }

@@ -1,7 +1,13 @@
 ﻿from typing import Optional, TypedDict
 
 from eetlijst_py.generated.all_users_in_group import AllUsersInGroup
+from eetlijst_py.generated.all_users_in_group_subscription import (
+    AllUsersInGroupSubscription,
+)
 from eetlijst_py.generated.get_user_in_group import GetUserInGroup
+from eetlijst_py.generated.get_user_in_group_subscription import (
+    GetUserInGroupSubscription,
+)
 from eetlijst_py.generated.join_group import JoinGroup
 from eetlijst_py.generated.update_user_in_group import UpdateUserInGroup
 from eetlijst_py.generated.update_users_in_group import UpdateUsersInGroup
@@ -64,7 +70,9 @@ def transform_update_user_in_group(result: UpdateUserInGroup) -> UserInGroupResu
     return transform_user_in_group(result.update_eetschema_users_in_group_by_pk)
 
 
-def transform_all_users_in_group(result: AllUsersInGroup) -> list[UserInGroupResult]:
+def transform_all_users_in_group(
+    result: AllUsersInGroup | AllUsersInGroupSubscription,
+) -> list[UserInGroupResult]:
     if not result.eetschema_group_by_pk:
         raise EetlijstException("Failed to get users")
 
@@ -74,7 +82,9 @@ def transform_all_users_in_group(result: AllUsersInGroup) -> list[UserInGroupRes
     ]
 
 
-def transform_get_user_in_group(result: GetUserInGroup) -> UserInGroupResult:
+def transform_get_user_in_group(
+    result: GetUserInGroup | GetUserInGroupSubscription,
+) -> UserInGroupResult:
     if (
         not result.eetschema_group_by_pk
         or not result.eetschema_group_by_pk.users_in_groups

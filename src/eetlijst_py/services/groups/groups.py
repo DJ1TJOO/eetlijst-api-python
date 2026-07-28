@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, AsyncIterator, List, Optional
 
 from eetlijst_py.generated import order_by
 from eetlijst_py.generated.input_types import (
@@ -19,6 +19,8 @@ from eetlijst_py.services.groups.transformers import (
     transform_get_group,
     transform_update_group,
 )
+
+from eetlijst_py.utils.params import build_where, default_order
 
 if TYPE_CHECKING:
     from eetlijst_py.services.group_users import GroupUsers
@@ -41,7 +43,23 @@ class Groups(BaseService):
             include_inactive_users=include_inactive_users,
             headers=self._get_headers(),
         )
+
         return transform_get_group(result)
+
+    async def get_subscription(
+        self,
+        group_id: str,
+        include_users: bool = False,
+        include_inactive_users: bool = False,
+    ) -> AsyncIterator[GroupResult]:
+        async for result in self._client.get_group_subscription(
+            group_id=group_id,
+            include_users=include_users,
+            include_inactive_users=include_inactive_users,
+            headers=self._get_ws_headers(),
+        ):
+            if result:
+                yield transform_get_group(result)
 
     async def all(
         self,
@@ -52,19 +70,17 @@ class Groups(BaseService):
         order: Optional[List[eetschema_users_in_group_order_by]] = None,
         limit: Optional[int] = None,
     ) -> List[GroupResult]:
-        where_data = (
-            where.model_copy(update={"user_id": String_comparison_exp(_eq=user_id)})
-            if where is not None
-            else eetschema_users_in_group_bool_exp(
-                user_id=String_comparison_exp(_eq=user_id)
-            )
+        where_data = build_where(
+            eetschema_users_in_group_bool_exp,
+            where,
+            user_id=String_comparison_exp(_eq=user_id),
         )
-
-        order_data = order or [
+        order_data = default_order(
+            order,
             eetschema_users_in_group_order_by(
                 group=eetschema_group_order_by(created_at=order_by.asc)
-            )
-        ]
+            ),
+        )
 
         result = await self._client.all_groups(
             where=where_data,
@@ -76,6 +92,39 @@ class Groups(BaseService):
         )
 
         return transform_all_groups(result)
+
+    async def all_subscription(
+        self,
+        user_id: str,
+        include_users: bool = False,
+        include_inactive_users: bool = False,
+        where: Optional[eetschema_users_in_group_bool_exp] = None,
+        order: Optional[List[eetschema_users_in_group_order_by]] = None,
+        limit: Optional[int] = None,
+    ) -> AsyncIterator[List[GroupResult]]:
+        where_data = (
+            where.model_copy(update={"user_id": String_comparison_exp(_eq=user_id)})
+            if where is not None
+            else eetschema_users_in_group_bool_exp(
+                user_id=String_comparison_exp(_eq=user_id)
+            )
+        )
+        order_data = order or [
+            eetschema_users_in_group_order_by(
+                group=eetschema_group_order_by(created_at=order_by.asc)
+            )
+        ]
+
+        async for result in self._client.all_groups_subscription(
+            where=where_data,
+            order=order_data,
+            limit=limit,
+            include_users=include_users,
+            include_inactive_users=include_inactive_users,
+            headers=self._get_ws_headers(),
+        ):
+            if result:
+                yield transform_all_groups(result)
 
     async def create(self, name: str, user_id: str) -> GroupResult:
         result = await self._client.create_group(

@@ -3,6 +3,12 @@ from typing import Optional, TypedDict
 from eetlijst_py.generated.create_expense import CreateExpense
 from eetlijst_py.generated.fragments import ExpenseFields
 from eetlijst_py.generated.group_total_expense import GroupTotalExpense
+from eetlijst_py.generated.group_total_expense_import_subscription import (
+    GroupTotalExpenseImportSubscription,
+)
+from eetlijst_py.generated.group_total_expense_subscription import (
+    GroupTotalExpenseSubscription,
+)
 from eetlijst_py.generated.update_expense import UpdateExpense
 
 from eetlijst_py.exceptions import EetlijstException
@@ -39,35 +45,49 @@ def transform_update_expense(expense: UpdateExpense) -> ExpenseFields:
     return transform_expense(expense.update_eetschema_expense.returning[0])
 
 
+def _get_payed_amount(aggregate) -> int:
+    if (
+        aggregate
+        and aggregate.aggregate
+        and aggregate.aggregate.sum
+        and aggregate.aggregate.sum.payed_amount is not None
+    ):
+        return aggregate.aggregate.sum.payed_amount
+
+    return 0
+
+
 def transform_group_total_expense(
     result: Optional[GroupTotalExpense],
 ) -> GroupTotalExpenseDict:
     if not result:
         return {"total": 0, "expenses": 0, "imported": 0}
 
-    expenses_total = 0
-    if (
-        result.eetschema_expense_aggregate
-        and result.eetschema_expense_aggregate.aggregate
-        and result.eetschema_expense_aggregate.aggregate.sum
-        and result.eetschema_expense_aggregate.aggregate.sum.payed_amount is not None
-    ):
-        expenses_total = result.eetschema_expense_aggregate.aggregate.sum.payed_amount
-
-    imports_total = 0
-    if (
+    expenses_total = _get_payed_amount(result.eetschema_expense_aggregate)
+    imported_total = _get_payed_amount(
         result.eetschema_expense_eetlijst_import_aggregate
-        and result.eetschema_expense_eetlijst_import_aggregate.aggregate
-        and result.eetschema_expense_eetlijst_import_aggregate.aggregate.sum
-        and result.eetschema_expense_eetlijst_import_aggregate.aggregate.sum.payed_amount
-        is not None
-    ):
-        expenses_total = (
-            result.eetschema_expense_eetlijst_import_aggregate.aggregate.sum.payed_amount
-        )
+    )
 
     return {
-        "total": expenses_total + imports_total,
+        "total": expenses_total + imported_total,
         "expenses": expenses_total,
-        "imported": imports_total,
+        "imported": imported_total,
+    }
+
+
+def transform_group_total_expense_subscription(
+    expenses: Optional[GroupTotalExpenseSubscription],
+    imported: Optional[GroupTotalExpenseImportSubscription],
+) -> GroupTotalExpenseDict:
+    expenses_total = _get_payed_amount(
+        expenses.eetschema_expense_aggregate if expenses else None
+    )
+    imported_total = _get_payed_amount(
+        imported.eetschema_expense_eetlijst_import_aggregate if imported else None
+    )
+
+    return {
+        "total": expenses_total + imported_total,
+        "expenses": expenses_total,
+        "imported": imported_total,
     }

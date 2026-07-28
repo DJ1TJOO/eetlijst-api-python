@@ -4,9 +4,11 @@ from typing import Optional
 from pydantic import BaseModel
 
 from eetlijst_py.generated.all_groups import AllGroups
+from eetlijst_py.generated.all_groups_subscription import AllGroupsSubscription
 from eetlijst_py.generated.create_group import CreateGroup
 from eetlijst_py.generated.fragments import GroupFields, UserInGroupFields
 from eetlijst_py.generated.get_group import GetGroup
+from eetlijst_py.generated.get_group_subscription import GetGroupSubscription
 from eetlijst_py.generated.update_group import UpdateGroup
 
 from eetlijst_py.exceptions import EetlijstException
@@ -104,7 +106,7 @@ def transform_update_group(result: UpdateGroup) -> GroupResult:
 
 
 def transform_all_groups(
-    result: AllGroups,
+    result: AllGroups | AllGroupsSubscription,
 ) -> list[GroupResult]:
     transformed_groups: list[GroupResult] = []
     for user_in_group in result.eetschema_users_in_group:
@@ -123,7 +125,7 @@ def transform_all_groups(
 
 
 def transform_get_group(
-    result: GetGroup,
+    result: GetGroup | GetGroupSubscription,
 ) -> GroupResult:
     if not result.eetschema_group_by_pk:
         raise EetlijstException("Failed to get group")

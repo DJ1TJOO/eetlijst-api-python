@@ -11,7 +11,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "ariadne-codegen>=0.18",
+  "ariadne-codegen[subscriptions]>=0.18",
   "mypy>=1.8.0",
   "black>=24.0",
   "isort>=5.13",

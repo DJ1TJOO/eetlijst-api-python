@@ -21,6 +21,8 @@ from eetlijst_py.services.group_users.transformers import (
     transform_update_users_in_group,
 )
 
+from eetlijst_py.utils.params import build_where, default_order
+
 
 class UserOrderItem(TypedDict):
     user_id: str
@@ -36,7 +38,17 @@ class GroupUsers(BaseService):
             user_id=user_id,
             headers=self._get_headers(),
         )
+
         return transform_get_user_in_group(result)
+
+    async def get_subscription(self, group_id: str, user_id: str):
+        async for result in self._client.get_user_in_group_subscription(
+            group_id=group_id,
+            user_id=user_id,
+            headers=self._get_ws_headers(),
+        ):
+            if result:
+                yield transform_get_user_in_group(result)
 
     async def all(
         self,
@@ -46,23 +58,17 @@ class GroupUsers(BaseService):
         order: Optional[list[eetschema_users_in_group_order_by]] = None,
         limit: Optional[int] = None,
     ):
-        if where is not None:
-            update_data: dict[
-                str, Union[uuid_comparison_exp, Boolean_comparison_exp]
-            ] = {"group_id": uuid_comparison_exp(_eq=group_id)}
-            if not include_inactive_users:
-                update_data["active"] = Boolean_comparison_exp(_eq=True)
+        where_data = build_where(
+            eetschema_users_in_group_bool_exp,
+            where,
+            group_id=uuid_comparison_exp(_eq=group_id),
+            active=None if include_inactive_users else Boolean_comparison_exp(_eq=True),
+        )
 
-            where_data = where.model_copy(update=update_data)
-        else:
-            where_data = eetschema_users_in_group_bool_exp(
-                group_id=uuid_comparison_exp(_eq=group_id),
-                active=(
-                    None if include_inactive_users else Boolean_comparison_exp(_eq=True)
-                ),
-            )
-
-        order_data = order or [eetschema_users_in_group_order_by(order=order_by.asc)]
+        order_data = default_order(
+            order,
+            eetschema_users_in_group_order_by(order=order_by.asc),
+        )
 
         result = await self._client.all_users_in_group(
             group_id=group_id,
@@ -73,6 +79,36 @@ class GroupUsers(BaseService):
         )
 
         return transform_all_users_in_group(result)
+
+    async def all_subscription(
+        self,
+        group_id: str,
+        include_inactive_users: bool = False,
+        where: Optional[eetschema_users_in_group_bool_exp] = None,
+        order: Optional[list[eetschema_users_in_group_order_by]] = None,
+        limit: Optional[int] = None,
+    ):
+        where_data = build_where(
+            eetschema_users_in_group_bool_exp,
+            where,
+            group_id=uuid_comparison_exp(_eq=group_id),
+            active=None if include_inactive_users else Boolean_comparison_exp(_eq=True),
+        )
+
+        order_data = default_order(
+            order,
+            eetschema_users_in_group_order_by(order=order_by.asc),
+        )
+
+        async for result in self._client.all_users_in_group_subscription(
+            group_id=group_id,
+            where=where_data,
+            order=order_data,
+            limit=limit,
+            headers=self._get_ws_headers(),
+        ):
+            if result:
+                yield transform_all_users_in_group(result)
 
     async def add(self, group_id: str, user_id: str, invite_id: str):
         result = await self._client.join_group(

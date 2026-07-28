@@ -4,6 +4,12 @@ from typing import Any, Optional
 from .base_model import BaseModel
 
 
+class AppStatusFields(BaseModel):
+    id: str
+    beta_online: bool
+    updated_at: datetime
+
+
 class AttendanceFields(BaseModel):
     created_at: datetime
     updated_at: datetime
@@ -115,7 +121,7 @@ class GroupFieldsSummary(BaseModel):
     user_id: Optional[str]
 
 
-class ItemFields(BaseModel):
+class ListItemFields(BaseModel):
     active: bool
     checked: bool
     group_id: str
@@ -225,11 +231,12 @@ class UserInGroupFieldsUser(UserFields):
     pass
 
 
+AppStatusFields.model_rebuild()
 AttendanceFields.model_rebuild()
 ExpenseFields.model_rebuild()
 EventFields.model_rebuild()
 GroupFields.model_rebuild()
-ItemFields.model_rebuild()
+ListItemFields.model_rebuild()
 SettlementFields.model_rebuild()
 UserFields.model_rebuild()
 UserFieldsPrivate.model_rebuild()

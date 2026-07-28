@@ -1,0 +1,23 @@
+subscription GroupTotalExpenseSubscription($groupId: uuid) {
+	eetschema_expense_aggregate(
+		where: { group_id: { _eq: $groupId }, deleted: { _eq: false } }
+	) {
+		aggregate {
+			sum {
+				payed_amount
+			}
+		}
+	}
+}
+
+subscription GroupTotalExpenseImportSubscription($groupId: uuid) {
+	eetschema_expense_eetlijst_import_aggregate(
+		where: { group_id: { _eq: $groupId } }
+	) {
+		aggregate {
+			sum {
+				payed_amount
+			}
+		}
+	}
+}

@@ -1,5 +1,7 @@
 mutation CreateSettlement($groupId: uuid!) {
-    settlement: insert_eetschema_settlements_one(object: { group_id: $groupId }) {
-        ...SettlementFields
-    }
+	settlement: insert_eetschema_settlements_one(
+		object: { group_id: $groupId }
+	) {
+		...SettlementFields
+	}
 }

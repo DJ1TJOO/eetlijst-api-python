@@ -1,11 +1,12 @@
-query AllUsersInGroup($groupId: uuid!, $where: eetschema_users_in_group_bool_exp, $order: [eetschema_users_in_group_order_by!], $limit: Int) {
-    eetschema_group_by_pk(id: $groupId) {
-        users_in_groups(
-          where: $where
-          order_by: $order
-          limit: $limit
-        ) {
-          ...UserInGroupFields
-        }
-    }
+query AllUsersInGroup(
+	$groupId: uuid!
+	$where: eetschema_users_in_group_bool_exp
+	$order: [eetschema_users_in_group_order_by!]
+	$limit: Int
+) {
+	eetschema_group_by_pk(id: $groupId) {
+		users_in_groups(where: $where, order_by: $order, limit: $limit) {
+			...UserInGroupFields
+		}
+	}
 }

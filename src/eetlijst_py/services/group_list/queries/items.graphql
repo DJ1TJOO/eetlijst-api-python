@@ -1,9 +1,9 @@
-query ListItems($where: eetschema_list_bool_exp, $order: [eetschema_list_order_by!], $limit: Int) {
-    eetschema_list(
-        where: $where
-        order_by: $order
-        limit: $limit
-    ) {
-        ...ItemFields
-    }
+query ListItems(
+	$where: eetschema_list_bool_exp
+	$order: [eetschema_list_order_by!]
+	$limit: Int
+) {
+	eetschema_list(where: $where, order_by: $order, limit: $limit) {
+		...ListItemFields
+	}
 }

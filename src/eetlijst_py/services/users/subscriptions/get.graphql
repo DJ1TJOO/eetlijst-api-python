@@ -1,0 +1,5 @@
+subscription GetUserSubscription($userId: String!) {
+	eetschema_user_private(where: { id: { _eq: $userId } }) {
+		...UserFieldsPrivate
+	}
+}

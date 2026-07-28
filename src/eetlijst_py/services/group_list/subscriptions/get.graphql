@@ -1,0 +1,5 @@
+subscription GetListItemSubscription($id: uuid!) {
+	eetschema_list_by_pk(id: $id) {
+		...ListItemFields
+	}
+}

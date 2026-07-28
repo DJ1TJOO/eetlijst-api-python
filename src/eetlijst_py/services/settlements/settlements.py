@@ -1,7 +1,7 @@
 import asyncio
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import List, Optional, TypedDict
+from typing import AsyncIterator, List, Optional, TypedDict
 
 from eetlijst_py.generated import order_by
 from eetlijst_py.generated.fragments import ExpenseFields
@@ -34,6 +34,8 @@ from eetlijst_py.services.settlements.utils import (
     calculate_adjustment_expenses,
 )
 
+from eetlijst_py.utils.params import build_where, default_order
+
 
 class SettleResult(TypedDict):
     id: str
@@ -44,15 +46,23 @@ class SettleResult(TypedDict):
 @dataclass
 class Settlements(BaseService):
 
-    async def get(self, settlement_id: str) -> Optional[SettlementResult]:
-        result = await self._client.all_settlements(
-            where=eetschema_settlements_bool_exp(
-                id=uuid_comparison_exp(_eq=settlement_id),
-            ),
+    async def get(self, settlement_id: str) -> SettlementResult | None:
+        result = await self._client.get_settlement(
+            id=settlement_id,
             headers=self._get_headers(),
         )
 
-        return transform_settlement(result.eetschema_settlements[0])
+        return transform_settlement(result.eetschema_settlements_by_pk)
+
+    async def get_subscription(
+        self, settlement_id: str
+    ) -> AsyncIterator[SettlementResult]:
+        async for result in self._client.get_settlement_subscription(
+            id=settlement_id,
+            headers=self._get_ws_headers(),
+        ):
+            if result and result.eetschema_settlements_by_pk:
+                yield transform_settlement(result.eetschema_settlements_by_pk)
 
     async def all(
         self,
@@ -61,14 +71,16 @@ class Settlements(BaseService):
         order: Optional[list[eetschema_settlements_order_by]] = None,
         limit: Optional[int] = None,
     ) -> list[SettlementResult]:
-        group_filter = uuid_comparison_exp(_eq=group_id)
-        where_data = (
-            where.model_copy(update={"group_id": group_filter})
-            if where is not None
-            else eetschema_settlements_bool_exp(group_id=group_filter)
+        where_data = build_where(
+            eetschema_settlements_bool_exp,
+            where,
+            group_id=uuid_comparison_exp(_eq=group_id),
         )
 
-        order_data = order or [eetschema_settlements_order_by(created_at=order_by.asc)]
+        order_data = default_order(
+            order,
+            eetschema_settlements_order_by(created_at=order_by.asc),
+        )
 
         result = await self._client.all_settlements(
             where=where_data,
@@ -77,6 +89,33 @@ class Settlements(BaseService):
             headers=self._get_headers(),
         )
         return [transform_settlement(s) for s in result.eetschema_settlements]
+
+    async def all_subscription(
+        self,
+        group_id: str,
+        where: Optional[eetschema_settlements_bool_exp] = None,
+        order: Optional[list[eetschema_settlements_order_by]] = None,
+        limit: Optional[int] = None,
+    ):
+        where_data = build_where(
+            eetschema_settlements_bool_exp,
+            where,
+            group_id=uuid_comparison_exp(_eq=group_id),
+        )
+
+        order_data = default_order(
+            order,
+            eetschema_settlements_order_by(created_at=order_by.asc),
+        )
+
+        async for result in self._client.all_settlements_subscription(
+            where=where_data,
+            order=order_data,
+            limit=limit,
+            headers=self._get_ws_headers(),
+        ):
+            if result and result.eetschema_settlements:
+                yield [transform_settlement(s) for s in result.eetschema_settlements]
 
     async def create(self, group_id: str) -> SettlementResult:
         result = await self._client.create_settlement(
@@ -96,21 +135,12 @@ class Settlements(BaseService):
             settlement = await self.create(group_id=group_id)
             settlement_id = settlement.id
 
-        group_filter = uuid_comparison_exp(_eq=group_id)
-        settled_filter = uuid_comparison_exp(_is_null=True)
-
-        if select is not None:
-            where_data = select.model_copy(
-                update={
-                    "group_id": group_filter,
-                    "settled_id": settled_filter,
-                }
-            )
-        else:
-            where_data = eetschema_expense_bool_exp(
-                group_id=group_filter,
-                settled_id=settled_filter,
-            )
+        where_data = build_where(
+            eetschema_expense_bool_exp,
+            select,
+            group_id=uuid_comparison_exp(_eq=group_id),
+            settled_id=uuid_comparison_exp(_is_null=True),
+        )
 
         result = await self._client.settle_unsettled_expenses(
             settlement_id=settlement_id,
@@ -175,12 +205,14 @@ class Settlements(BaseService):
         settlement_id: str,
         where: Optional[eetschema_expense_bool_exp] = None,
         order: Optional[list[eetschema_expense_order_by]] = None,
+        limit: Optional[int] = None,
     ) -> list[ExpenseFields]:
         return await self._expenses(
             settlement_id=settlement_id,
             settlement_expense_id_not_null=False,
             where=where,
             order=order,
+            limit=limit,
         )
 
     async def adjustments(
@@ -188,12 +220,14 @@ class Settlements(BaseService):
         settlement_id: str,
         where: Optional[eetschema_expense_bool_exp] = None,
         order: Optional[list[eetschema_expense_order_by]] = None,
+        limit: Optional[int] = None,
     ) -> list[ExpenseFields]:
         return await self._expenses(
             settlement_id=settlement_id,
             settlement_expense_id_not_null=True,
             where=where,
             order=order,
+            limit=limit,
         )
 
     async def _expenses(
@@ -202,33 +236,91 @@ class Settlements(BaseService):
         settlement_expense_id_not_null: bool,
         where: Optional[eetschema_expense_bool_exp] = None,
         order: Optional[list[eetschema_expense_order_by]] = None,
+        limit: Optional[int] = None,
     ) -> list[ExpenseFields]:
-        deleted_filter = Boolean_comparison_exp(_eq=False)
-        settled_filter = uuid_comparison_exp(_eq=settlement_id)
-        settlement_expense_filter = uuid_comparison_exp(
-            _is_null=not settlement_expense_id_not_null
+        where_data = build_where(
+            eetschema_expense_bool_exp,
+            where,
+            deleted=Boolean_comparison_exp(_eq=False),
+            settled_id=uuid_comparison_exp(_eq=settlement_id),
+            settlement_expense_id=uuid_comparison_exp(
+                _is_null=not settlement_expense_id_not_null
+            ),
         )
 
-        if where is not None:
-            where_data = where.model_copy(
-                update={
-                    "deleted": deleted_filter,
-                    "settled_id": settled_filter,
-                    "settlement_expense_id": settlement_expense_filter,
-                }
-            )
-        else:
-            where_data = eetschema_expense_bool_exp(
-                deleted=deleted_filter,
-                settled_id=settled_filter,
-                settlement_expense_id=settlement_expense_filter,
-            )
-
-        order_data = order or [eetschema_expense_order_by(created_at=order_by.asc)]
+        order_data = default_order(
+            order,
+            eetschema_expense_order_by(created_at=order_by.asc),
+        )
 
         result = await self._client.settlement_expenses(
             where=where_data,
             order=order_data,
+            limit=limit,
             headers=self._get_headers(),
         )
         return transform_settlement_expenses(result)
+
+    async def expenses_subscription(
+        self,
+        settlement_id: str,
+        where: Optional[eetschema_expense_bool_exp] = None,
+        order: Optional[list[eetschema_expense_order_by]] = None,
+        limit: Optional[int] = None,
+    ) -> AsyncIterator[list[ExpenseFields]]:
+        async for items in self._expenses_subscription(
+            settlement_id=settlement_id,
+            settlement_expense_id_not_null=False,
+            where=where,
+            order=order,
+            limit=limit,
+        ):
+            yield items
+
+    async def adjustments_subscription(
+        self,
+        settlement_id: str,
+        where: Optional[eetschema_expense_bool_exp] = None,
+        order: Optional[list[eetschema_expense_order_by]] = None,
+        limit: Optional[int] = None,
+    ) -> AsyncIterator[list[ExpenseFields]]:
+        async for items in self._expenses_subscription(
+            settlement_id=settlement_id,
+            settlement_expense_id_not_null=True,
+            where=where,
+            order=order,
+            limit=limit,
+        ):
+            yield items
+
+    async def _expenses_subscription(
+        self,
+        settlement_id: str,
+        settlement_expense_id_not_null: bool,
+        where: Optional[eetschema_expense_bool_exp] = None,
+        order: Optional[list[eetschema_expense_order_by]] = None,
+        limit: Optional[int] = None,
+    ) -> AsyncIterator[list[ExpenseFields]]:
+        where_data = build_where(
+            eetschema_expense_bool_exp,
+            where,
+            deleted=Boolean_comparison_exp(_eq=False),
+            settled_id=uuid_comparison_exp(_eq=settlement_id),
+            settlement_expense_id=uuid_comparison_exp(
+                _is_null=not settlement_expense_id_not_null
+            ),
+        )
+
+        order_data = default_order(
+            order,
+            eetschema_expense_order_by(created_at=order_by.asc),
+        )
+
+        async for result in self._client.settlement_expenses_subscription(
+            where=where_data,
+            order=order_data,
+            limit=limit,
+            headers=self._get_ws_headers(),
+        ):
+            if result:
+                yield transform_settlement_expenses(result)

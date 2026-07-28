@@ -1,0 +1,11 @@
+subscription AllEventsSubscription(
+	$where: eetschema_event_bool_exp
+	$order: [eetschema_event_order_by!]
+	$limit: Int
+	$includeAttendees: Boolean = false
+	$includeExpenses: Boolean = false
+) {
+	eetschema_event(where: $where, order_by: $order, limit: $limit) {
+		...EventFields
+	}
+}

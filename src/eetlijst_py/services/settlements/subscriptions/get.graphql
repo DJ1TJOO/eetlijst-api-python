@@ -1,0 +1,5 @@
+subscription GetSettlementSubscription($id: uuid!) {
+	eetschema_settlements_by_pk(id: $id) {
+		...SettlementFields
+	}
+}

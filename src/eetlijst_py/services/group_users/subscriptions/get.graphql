@@ -1,0 +1,7 @@
+subscription GetUserInGroupSubscription($groupId: uuid!, $userId: String!) {
+	eetschema_group_by_pk(id: $groupId) {
+		users_in_groups(where: { user_id: { _eq: $userId } }) {
+			...UserInGroupFields
+		}
+	}
+}

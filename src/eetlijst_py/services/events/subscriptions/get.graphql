@@ -1,0 +1,9 @@
+subscription GetEventSubscription(
+	$eventId: uuid!
+	$includeAttendees: Boolean = false
+	$includeExpenses: Boolean = false
+) {
+	eetschema_event_by_pk(id: $eventId) {
+		...EventFields
+	}
+}

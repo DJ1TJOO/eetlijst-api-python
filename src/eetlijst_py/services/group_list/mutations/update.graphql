@@ -1,8 +1,5 @@
 mutation UpdateListItem($id: uuid!, $_set: eetschema_list_set_input!) {
-    update_eetschema_list_by_pk(
-        pk_columns: { id: $id }
-        _set: $_set
-    ) {
-        ...ItemFields
-    }
+	update_eetschema_list_by_pk(pk_columns: { id: $id }, _set: $_set) {
+		...ListItemFields
+	}
 }

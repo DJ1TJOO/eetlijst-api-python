@@ -1,8 +1,8 @@
 mutation UpdateUsersInGroup($updates: [eetschema_users_in_group_updates!]!) {
-    update_eetschema_users_in_group_many(updates: $updates) {
-        number_users_in_group: affected_rows
-        users_in_group: returning {
-            ...UserInGroupFields
-        }
-    }
+	update_eetschema_users_in_group_many(updates: $updates) {
+		number_users_in_group: affected_rows
+		users_in_group: returning {
+			...UserInGroupFields
+		}
+	}
 }

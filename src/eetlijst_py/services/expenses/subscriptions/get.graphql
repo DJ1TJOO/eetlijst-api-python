@@ -1,0 +1,5 @@
+subscription GetExpenseSubscription($id: uuid!) {
+	eetschema_expense_by_pk(id: $id) {
+		...ExpenseFields
+	}
+}

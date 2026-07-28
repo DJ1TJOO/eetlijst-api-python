@@ -19,17 +19,27 @@ from eetlijst_py.services.group_list.transformers import (
     transform_update_list_item,
 )
 
+from eetlijst_py.utils.params import build_where
+
 
 @dataclass
 class GroupList(BaseService):
 
     async def get(self, item_id: str):
-        result = await self._client.list_items(
-            where=eetschema_list_bool_exp(id=uuid_comparison_exp(_eq=item_id)),
+        result = await self._client.get_list_item(
+            id=item_id,
             headers=self._get_headers(),
         )
 
-        return transform_list_item(result.eetschema_list[0])
+        return transform_list_item(result.eetschema_list_by_pk)
+
+    async def get_subscription(self, item_id: str):
+        async for result in self._client.get_list_item_subscription(
+            id=item_id,
+            headers=self._get_ws_headers(),
+        ):
+            if result and result.eetschema_list_by_pk:
+                yield transform_list_item(result.eetschema_list_by_pk)
 
     async def items(
         self,
@@ -38,16 +48,11 @@ class GroupList(BaseService):
         order: Optional[list[eetschema_list_order_by]] = None,
         limit: Optional[int] = None,
     ):
-        if where is not None:
-            where_data = where.model_copy(
-                update={
-                    "group_id": uuid_comparison_exp(_eq=group_id),
-                }
-            )
-        else:
-            where_data = eetschema_list_bool_exp(
-                group_id=uuid_comparison_exp(_eq=group_id),
-            )
+        where_data = build_where(
+            eetschema_list_bool_exp,
+            where,
+            group_id=uuid_comparison_exp(_eq=group_id),
+        )
 
         result = await self._client.list_items(
             where=where_data,
@@ -57,6 +62,28 @@ class GroupList(BaseService):
         )
 
         return [transform_list_item(item) for item in result.eetschema_list]
+
+    async def items_subscription(
+        self,
+        group_id: str,
+        where: Optional[eetschema_list_bool_exp] = None,
+        order: Optional[list[eetschema_list_order_by]] = None,
+        limit: Optional[int] = None,
+    ):
+        where_data = build_where(
+            eetschema_list_bool_exp,
+            where,
+            group_id=uuid_comparison_exp(_eq=group_id),
+        )
+
+        async for result in self._client.list_items_subscription(
+            where=where_data,
+            order=order,
+            limit=limit,
+            headers=self._get_ws_headers(),
+        ):
+            if result and result.eetschema_list:
+                yield [transform_list_item(item) for item in result.eetschema_list]
 
     async def create_item(self, data: eetschema_list_insert_input):
         result = await self._client.create_list_item(*data, headers=self._get_headers())

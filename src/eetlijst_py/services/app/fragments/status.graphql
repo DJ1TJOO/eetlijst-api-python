@@ -1,0 +1,5 @@
+fragment AppStatusFields on eetschema_app_status {
+	id
+	beta_online
+	updated_at
+}

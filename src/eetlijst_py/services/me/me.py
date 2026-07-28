@@ -36,6 +36,15 @@ class Me:
             )
         return await self._users.get(self.user_id)
 
+    async def get_subscription(self):
+        if not self.user_id:
+            raise ValueError(
+                "Cannot fetch user profile: missing 'sub' (user_id) in JWT."
+            )
+
+        async for user in self._users.get_subscription(self.user_id):
+            yield user
+
     @staticmethod
     def _decode_payload(token: str) -> dict[str, Any]:
         try:

@@ -1,7 +1,7 @@
 from typing import Optional
 
 from .base_model import BaseModel
-from .fragments import ItemFields
+from .fragments import ListItemFields
 
 
 class CreateManyListItems(BaseModel):
@@ -12,7 +12,7 @@ class CreateManyListItemsInsertEetschemaList(BaseModel):
     returning: list["CreateManyListItemsInsertEetschemaListReturning"]
 
 
-class CreateManyListItemsInsertEetschemaListReturning(ItemFields):
+class CreateManyListItemsInsertEetschemaListReturning(ListItemFields):
     pass
 
 

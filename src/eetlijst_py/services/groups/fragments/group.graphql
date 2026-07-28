@@ -1,17 +1,17 @@
 fragment GroupFields on eetschema_group {
-    id
-    name
-    default_close_time
-    created_at
-    created_at_eetlijst
-    statistics_start_date
-    statistics_end_date
-    invite_uuid
-    invite_open
-    description
+	id
+	name
+	default_close_time
+	created_at
+	created_at_eetlijst
+	statistics_start_date
+	statistics_end_date
+	invite_uuid
+	invite_open
+	description
 
-    summary(order_by: { payed_total: desc }) {
-        payed_total
-        user_id
-    }
+	summary(order_by: { payed_total: desc }) {
+		payed_total
+		user_id
+	}
 }

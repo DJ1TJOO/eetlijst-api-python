@@ -1,5 +1,9 @@
-query AllSettlements($where: eetschema_settlements_bool_exp, $order: [eetschema_settlements_order_by!], $limit: Int) {
-  eetschema_settlements(where: $where, order_by: $order, limit: $limit) {
-    ...SettlementFields
-  }
+query AllSettlements(
+	$where: eetschema_settlements_bool_exp
+	$order: [eetschema_settlements_order_by!]
+	$limit: Int
+) {
+	eetschema_settlements(where: $where, order_by: $order, limit: $limit) {
+		...SettlementFields
+	}
 }

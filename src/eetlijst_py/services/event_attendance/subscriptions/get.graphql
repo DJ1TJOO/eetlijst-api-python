@@ -1,0 +1,5 @@
+subscription GetAttendanceSubscription($eventId: uuid!, $userId: String!) {
+	eetschema_event_attendees_by_pk(user_id: $userId, event_id: $eventId) {
+		...AttendanceFields
+	}
+}

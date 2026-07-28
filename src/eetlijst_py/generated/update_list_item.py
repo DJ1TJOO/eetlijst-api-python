@@ -1,14 +1,14 @@
 from typing import Optional
 
 from .base_model import BaseModel
-from .fragments import ItemFields
+from .fragments import ListItemFields
 
 
 class UpdateListItem(BaseModel):
     update_eetschema_list_by_pk: Optional["UpdateListItemUpdateEetschemaListByPk"]
 
 
-class UpdateListItemUpdateEetschemaListByPk(ItemFields):
+class UpdateListItemUpdateEetschemaListByPk(ListItemFields):
     pass
 
 

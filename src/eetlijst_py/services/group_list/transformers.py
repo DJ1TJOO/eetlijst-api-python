@@ -2,13 +2,13 @@
 
 from eetlijst_py.generated.create_list_item import CreateListItem
 from eetlijst_py.generated.create_many_list_items import CreateManyListItems
-from eetlijst_py.generated.fragments import ItemFields
+from eetlijst_py.generated.fragments import ListItemFields
 from eetlijst_py.generated.update_list_item import UpdateListItem
 
 from eetlijst_py.exceptions import EetlijstException
 
 
-def transform_list_item(item: Optional[ItemFields]) -> ItemFields:
+def transform_list_item(item: Optional[ListItemFields]) -> ListItemFields:
     if not item:
         raise EetlijstException("List item not found")
 

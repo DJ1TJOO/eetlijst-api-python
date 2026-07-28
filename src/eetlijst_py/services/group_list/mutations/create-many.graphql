@@ -1,7 +1,7 @@
 mutation CreateManyListItems($items: [eetschema_list_insert_input!]!) {
-    insert_eetschema_list(objects: $items) {
-        returning {
-            ...ItemFields
-        }
-    }
+	insert_eetschema_list(objects: $items) {
+		returning {
+			...ListItemFields
+		}
+	}
 }

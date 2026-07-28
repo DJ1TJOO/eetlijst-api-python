@@ -1,12 +1,12 @@
 from .base_model import BaseModel
-from .fragments import ItemFields
+from .fragments import ListItemFields
 
 
 class ListItems(BaseModel):
     eetschema_list: list["ListItemsEetschemaList"]
 
 
-class ListItemsEetschemaList(ItemFields):
+class ListItemsEetschemaList(ListItemFields):
     pass
 
 

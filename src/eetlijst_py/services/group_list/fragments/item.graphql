@@ -1,10 +1,10 @@
-fragment ItemFields on eetschema_list {
-    active
-    checked
-    group_id
-    id
-    text
-    recipe_id
-    created_at
-    updated_at
+fragment ListItemFields on eetschema_list {
+	active
+	checked
+	group_id
+	id
+	text
+	recipe_id
+	created_at
+	updated_at
 }

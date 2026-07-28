@@ -44,6 +44,15 @@ class EventAttendance(BaseService):
         )
         return transform_attendance(result.eetschema_event_attendees_by_pk)
 
+    async def get_subscription(self, event_id: str, user_id: str):
+        async for result in self._client.get_attendance_subscription(
+            event_id,
+            user_id,
+            headers=self._get_ws_headers(),
+        ):
+            if result and result.eetschema_event_attendees_by_pk:
+                yield transform_attendance(result.eetschema_event_attendees_by_pk)
+
     async def all(
         self,
         where: eetschema_event_attendees_bool_exp | UnsetType | None = UNSET,
@@ -60,6 +69,24 @@ class EventAttendance(BaseService):
             transform_attendance(attendee)
             for attendee in result.eetschema_event_attendees
         ]
+
+    async def all_subscription(
+        self,
+        where: eetschema_event_attendees_bool_exp | UnsetType | None = UNSET,
+        order: list[eetschema_event_attendees_order_by] | UnsetType | None = UNSET,
+        limit: int | UnsetType | None = UNSET,
+    ):
+        async for result in self._client.all_attendances_subscription(
+            where,
+            order,
+            limit,
+            headers=self._get_ws_headers(),
+        ):
+            if result and result.eetschema_event_attendees:
+                yield [
+                    transform_attendance(attendee)
+                    for attendee in result.eetschema_event_attendees
+                ]
 
     async def attend(self, data: EventAttendceAttend):
         return await self.update_many([data])

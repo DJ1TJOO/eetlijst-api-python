@@ -1,25 +1,25 @@
 mutation CreateExpense(
-            $groupId: uuid!
-            $payedBy: String!
-            $data: [eetschema_expense_distribution_insert_input!]!
-            $description: String!
-            $payedAmount: Int!
-            $payedAt: timestamptz!
-            $eventId: uuid
-            $settlementExpenseId: uuid
-    ) {
-    insert_eetschema_expense_one(
-        object: {
-        description: $description
-        expense_distributions: { data: $data }
-        group_id: $groupId
-        payed_by: $payedBy
-        payed_amount: $payedAmount
-        event_id: $eventId
-        settlement_expense_id: $settlementExpenseId
-        payed_at: $payedAt
-        }
-    ) {
-        ...ExpenseFields
-    }
+	$groupId: uuid!
+	$payedBy: String!
+	$data: [eetschema_expense_distribution_insert_input!]!
+	$description: String!
+	$payedAmount: Int!
+	$payedAt: timestamptz!
+	$eventId: uuid
+	$settlementExpenseId: uuid
+) {
+	insert_eetschema_expense_one(
+		object: {
+			description: $description
+			expense_distributions: { data: $data }
+			group_id: $groupId
+			payed_by: $payedBy
+			payed_amount: $payedAmount
+			event_id: $eventId
+			settlement_expense_id: $settlementExpenseId
+			payed_at: $payedAt
+		}
+	) {
+		...ExpenseFields
+	}
 }

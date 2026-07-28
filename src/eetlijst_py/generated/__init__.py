@@ -1,19 +1,50 @@
 from .all_attendances import AllAttendances, AllAttendancesEetschemaEventAttendees
+from .all_attendances_subscription import (
+    AllAttendancesSubscription,
+    AllAttendancesSubscriptionEetschemaEventAttendees,
+)
 from .all_events import AllEvents, AllEventsEetschemaEvent
+from .all_events_subscription import (
+    AllEventsSubscription,
+    AllEventsSubscriptionEetschemaEvent,
+)
 from .all_expenses import AllExpenses, AllExpensesEetschemaExpense
+from .all_expenses_subscription import (
+    AllExpensesSubscription,
+    AllExpensesSubscriptionEetschemaExpense,
+)
 from .all_groups import (
     AllGroups,
     AllGroupsEetschemaUsersInGroup,
     AllGroupsEetschemaUsersInGroupGroup,
     AllGroupsEetschemaUsersInGroupGroupUsersInGroups,
 )
+from .all_groups_subscription import (
+    AllGroupsSubscription,
+    AllGroupsSubscriptionEetschemaUsersInGroup,
+    AllGroupsSubscriptionEetschemaUsersInGroupGroup,
+    AllGroupsSubscriptionEetschemaUsersInGroupGroupUsersInGroups,
+)
 from .all_settlements import AllSettlements, AllSettlementsEetschemaSettlements
+from .all_settlements_subscription import (
+    AllSettlementsSubscription,
+    AllSettlementsSubscriptionEetschemaSettlements,
+)
 from .all_users_in_group import (
     AllUsersInGroup,
     AllUsersInGroupEetschemaGroupByPk,
     AllUsersInGroupEetschemaGroupByPkUsersInGroups,
 )
+from .all_users_in_group_subscription import (
+    AllUsersInGroupSubscription,
+    AllUsersInGroupSubscriptionEetschemaGroupByPk,
+    AllUsersInGroupSubscriptionEetschemaGroupByPkUsersInGroups,
+)
 from .app_status import AppStatus, AppStatusEetschemaAppStatus
+from .app_status_subscription import (
+    AppStatusSubscription,
+    AppStatusSubscriptionEetschemaAppStatus,
+)
 from .async_base_client import AsyncBaseClient
 from .automatic_events import AutomaticEvents, AutomaticEventsQueryTodaysEvents
 from .base_model import BaseModel, Upload
@@ -98,6 +129,7 @@ from .exceptions import (
     GraphQLClientInvalidResponseError,
 )
 from .fragments import (
+    AppStatusFields,
     AttendanceFields,
     AttendanceFieldsLinkedEvent,
     AttendanceFieldsUserInGroup,
@@ -113,7 +145,7 @@ from .fragments import (
     ExpenseFieldsUpdatedBy,
     GroupFields,
     GroupFieldsSummary,
-    ItemFields,
+    ListItemFields,
     SettlementFields,
     SettlementFieldsAdjustmentsTotal,
     SettlementFieldsAdjustmentsTotalAggregate,
@@ -129,17 +161,54 @@ from .fragments import (
     UserInGroupFieldsUser,
 )
 from .get_attendance import GetAttendance, GetAttendanceEetschemaEventAttendeesByPk
+from .get_attendance_subscription import (
+    GetAttendanceSubscription,
+    GetAttendanceSubscriptionEetschemaEventAttendeesByPk,
+)
 from .get_event import GetEvent, GetEventEetschemaEventByPk
+from .get_event_subscription import (
+    GetEventSubscription,
+    GetEventSubscriptionEetschemaEventByPk,
+)
+from .get_expense import GetExpense, GetExpenseEetschemaExpenseByPk
+from .get_expense_subscription import (
+    GetExpenseSubscription,
+    GetExpenseSubscriptionEetschemaExpenseByPk,
+)
 from .get_group import (
     GetGroup,
     GetGroupEetschemaGroupByPk,
     GetGroupEetschemaGroupByPkUsersInGroups,
+)
+from .get_group_subscription import (
+    GetGroupSubscription,
+    GetGroupSubscriptionEetschemaGroupByPk,
+    GetGroupSubscriptionEetschemaGroupByPkUsersInGroups,
+)
+from .get_list_item import GetListItem, GetListItemEetschemaListByPk
+from .get_list_item_subscription import (
+    GetListItemSubscription,
+    GetListItemSubscriptionEetschemaListByPk,
+)
+from .get_settlement import GetSettlement, GetSettlementEetschemaSettlementsByPk
+from .get_settlement_subscription import (
+    GetSettlementSubscription,
+    GetSettlementSubscriptionEetschemaSettlementsByPk,
 )
 from .get_user import GetUser, GetUserEetschemaUserPrivate
 from .get_user_in_group import (
     GetUserInGroup,
     GetUserInGroupEetschemaGroupByPk,
     GetUserInGroupEetschemaGroupByPkUsersInGroups,
+)
+from .get_user_in_group_subscription import (
+    GetUserInGroupSubscription,
+    GetUserInGroupSubscriptionEetschemaGroupByPk,
+    GetUserInGroupSubscriptionEetschemaGroupByPkUsersInGroups,
+)
+from .get_user_subscription import (
+    GetUserSubscription,
+    GetUserSubscriptionEetschemaUserPrivate,
 )
 from .group_total_expense import (
     GroupTotalExpense,
@@ -149,6 +218,18 @@ from .group_total_expense import (
     GroupTotalExpenseEetschemaExpenseEetlijstImportAggregate,
     GroupTotalExpenseEetschemaExpenseEetlijstImportAggregateAggregate,
     GroupTotalExpenseEetschemaExpenseEetlijstImportAggregateAggregateSum,
+)
+from .group_total_expense_import_subscription import (
+    GroupTotalExpenseImportSubscription,
+    GroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregate,
+    GroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregateAggregate,
+    GroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregateAggregateSum,
+)
+from .group_total_expense_subscription import (
+    GroupTotalExpenseSubscription,
+    GroupTotalExpenseSubscriptionEetschemaExpenseAggregate,
+    GroupTotalExpenseSubscriptionEetschemaExpenseAggregateAggregate,
+    GroupTotalExpenseSubscriptionEetschemaExpenseAggregateAggregateSum,
 )
 from .input_types import (
     Boolean_comparison_exp,
@@ -538,6 +619,10 @@ from .input_types import (
 )
 from .join_group import JoinGroup, JoinGroupJoinGroup
 from .list_items import ListItems, ListItemsEetschemaList
+from .list_items_subscription import (
+    ListItemsSubscription,
+    ListItemsSubscriptionEetschemaList,
+)
 from .remove_account import RemoveAccount, RemoveAccountUpdateEetschemaUserByPk
 from .settle_unsettled_expenses import (
     SettleUnsettledExpenses,
@@ -545,6 +630,10 @@ from .settle_unsettled_expenses import (
     SettleUnsettledExpensesUpdateEetschemaExpenseExpenses,
 )
 from .settlement_expenses import SettlementExpenses, SettlementExpensesEetschemaExpense
+from .settlement_expenses_subscription import (
+    SettlementExpensesSubscription,
+    SettlementExpensesSubscriptionEetschemaExpense,
+)
 from .update_attendance import (
     UpdateAttendance,
     UpdateAttendanceUpdateEetschemaEventAttendeesByPk,
@@ -581,21 +670,39 @@ from .update_users_in_group import (
 __all__ = [
     "AllAttendances",
     "AllAttendancesEetschemaEventAttendees",
+    "AllAttendancesSubscription",
+    "AllAttendancesSubscriptionEetschemaEventAttendees",
     "AllEvents",
     "AllEventsEetschemaEvent",
+    "AllEventsSubscription",
+    "AllEventsSubscriptionEetschemaEvent",
     "AllExpenses",
     "AllExpensesEetschemaExpense",
+    "AllExpensesSubscription",
+    "AllExpensesSubscriptionEetschemaExpense",
     "AllGroups",
     "AllGroupsEetschemaUsersInGroup",
     "AllGroupsEetschemaUsersInGroupGroup",
     "AllGroupsEetschemaUsersInGroupGroupUsersInGroups",
+    "AllGroupsSubscription",
+    "AllGroupsSubscriptionEetschemaUsersInGroup",
+    "AllGroupsSubscriptionEetschemaUsersInGroupGroup",
+    "AllGroupsSubscriptionEetschemaUsersInGroupGroupUsersInGroups",
     "AllSettlements",
     "AllSettlementsEetschemaSettlements",
+    "AllSettlementsSubscription",
+    "AllSettlementsSubscriptionEetschemaSettlements",
     "AllUsersInGroup",
     "AllUsersInGroupEetschemaGroupByPk",
     "AllUsersInGroupEetschemaGroupByPkUsersInGroups",
+    "AllUsersInGroupSubscription",
+    "AllUsersInGroupSubscriptionEetschemaGroupByPk",
+    "AllUsersInGroupSubscriptionEetschemaGroupByPkUsersInGroups",
     "AppStatus",
     "AppStatusEetschemaAppStatus",
+    "AppStatusFields",
+    "AppStatusSubscription",
+    "AppStatusSubscriptionEetschemaAppStatus",
     "AsyncBaseClient",
     "AttendanceFields",
     "AttendanceFieldsLinkedEvent",
@@ -628,16 +735,40 @@ __all__ = [
     "Float_comparison_exp",
     "GetAttendance",
     "GetAttendanceEetschemaEventAttendeesByPk",
+    "GetAttendanceSubscription",
+    "GetAttendanceSubscriptionEetschemaEventAttendeesByPk",
     "GetEvent",
     "GetEventEetschemaEventByPk",
+    "GetEventSubscription",
+    "GetEventSubscriptionEetschemaEventByPk",
+    "GetExpense",
+    "GetExpenseEetschemaExpenseByPk",
+    "GetExpenseSubscription",
+    "GetExpenseSubscriptionEetschemaExpenseByPk",
     "GetGroup",
     "GetGroupEetschemaGroupByPk",
     "GetGroupEetschemaGroupByPkUsersInGroups",
+    "GetGroupSubscription",
+    "GetGroupSubscriptionEetschemaGroupByPk",
+    "GetGroupSubscriptionEetschemaGroupByPkUsersInGroups",
+    "GetListItem",
+    "GetListItemEetschemaListByPk",
+    "GetListItemSubscription",
+    "GetListItemSubscriptionEetschemaListByPk",
+    "GetSettlement",
+    "GetSettlementEetschemaSettlementsByPk",
+    "GetSettlementSubscription",
+    "GetSettlementSubscriptionEetschemaSettlementsByPk",
     "GetUser",
     "GetUserEetschemaUserPrivate",
     "GetUserInGroup",
     "GetUserInGroupEetschemaGroupByPk",
     "GetUserInGroupEetschemaGroupByPkUsersInGroups",
+    "GetUserInGroupSubscription",
+    "GetUserInGroupSubscriptionEetschemaGroupByPk",
+    "GetUserInGroupSubscriptionEetschemaGroupByPkUsersInGroups",
+    "GetUserSubscription",
+    "GetUserSubscriptionEetschemaUserPrivate",
     "GraphQLClientError",
     "GraphQLClientGraphQLError",
     "GraphQLClientGraphQLMultiError",
@@ -653,12 +784,22 @@ __all__ = [
     "GroupTotalExpenseEetschemaExpenseEetlijstImportAggregate",
     "GroupTotalExpenseEetschemaExpenseEetlijstImportAggregateAggregate",
     "GroupTotalExpenseEetschemaExpenseEetlijstImportAggregateAggregateSum",
+    "GroupTotalExpenseImportSubscription",
+    "GroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregate",
+    "GroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregateAggregate",
+    "GroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregateAggregateSum",
+    "GroupTotalExpenseSubscription",
+    "GroupTotalExpenseSubscriptionEetschemaExpenseAggregate",
+    "GroupTotalExpenseSubscriptionEetschemaExpenseAggregateAggregate",
+    "GroupTotalExpenseSubscriptionEetschemaExpenseAggregateAggregateSum",
     "Int_comparison_exp",
-    "ItemFields",
     "JoinGroup",
     "JoinGroupJoinGroup",
+    "ListItemFields",
     "ListItems",
     "ListItemsEetschemaList",
+    "ListItemsSubscription",
+    "ListItemsSubscriptionEetschemaList",
     "RemoveAccount",
     "RemoveAccountUpdateEetschemaUserByPk",
     "SampleInput",
@@ -667,6 +808,8 @@ __all__ = [
     "SettleUnsettledExpensesUpdateEetschemaExpenseExpenses",
     "SettlementExpenses",
     "SettlementExpensesEetschemaExpense",
+    "SettlementExpensesSubscription",
+    "SettlementExpensesSubscriptionEetschemaExpense",
     "SettlementFields",
     "SettlementFieldsAdjustmentsTotal",
     "SettlementFieldsAdjustmentsTotalAggregate",

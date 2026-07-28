@@ -1,21 +1,21 @@
 fragment UserFields on eetschema_user {
-    id
-    origin
+	id
+	origin
 
-    name
-    email
-    allergies
-    birthday
+	name
+	email
+	allergies
+	birthday
 
-    profile_image
-    order_of_buttom_bar
-    
-    wants_to_recieve_notifications
-    funnel_lead
+	profile_image
+	order_of_buttom_bar
 
-    cook_points_imports {
-      group_id
-      cook_points
-      allowed_to_edit
-    }
+	wants_to_recieve_notifications
+	funnel_lead
+
+	cook_points_imports {
+		group_id
+		cook_points
+		allowed_to_edit
+	}
 }

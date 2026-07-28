@@ -1,8 +1,5 @@
 mutation UpdateUser($userId: String!, $_set: eetschema_user_set_input!) {
-    update_eetschema_user_by_pk(
-        pk_columns: { id: $userId }
-        _set: $_set
-    ) {
-        ...UserFields
-    }
+	update_eetschema_user_by_pk(pk_columns: { id: $userId }, _set: $_set) {
+		...UserFields
+	}
 }

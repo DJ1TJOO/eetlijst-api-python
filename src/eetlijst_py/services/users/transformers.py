@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 from eetlijst_py.generated.fragments import UserFields, UserFieldsPrivate
 from eetlijst_py.generated.get_user import GetUser
+from eetlijst_py.generated.get_user_subscription import GetUserSubscription
 from eetlijst_py.generated.remove_account import (
     RemoveAccount,
     RemoveAccountUpdateEetschemaUserByPk,
@@ -82,7 +83,7 @@ def transform_user(user: Optional[UserFields]) -> UserResult:
     )
 
 
-def transform_get_user(result: GetUser) -> UserPrivateResult:
+def transform_get_user(result: GetUser | GetUserSubscription) -> UserPrivateResult:
     if not result.eetschema_user_private or len(result.eetschema_user_private) == 0:
         raise EetlijstException("User not found")
 

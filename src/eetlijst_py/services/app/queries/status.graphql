@@ -1,7 +1,5 @@
 query AppStatus {
-    eetschema_app_status {
-        id
-        beta_online
-        updated_at
-    }
+	eetschema_app_status {
+		...AppStatusFields
+	}
 }
