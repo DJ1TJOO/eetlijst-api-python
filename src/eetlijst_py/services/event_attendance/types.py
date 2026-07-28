@@ -3,6 +3,7 @@
 from datetime import datetime
 from enum import Enum
 from typing import Optional
+from warnings import deprecated
 
 from eetlijst_py.generated.all_attendances import AllAttendancesEetschemaEventAttendees
 from eetlijst_py.generated.base_model import BaseModel
@@ -41,6 +42,12 @@ class AttendanceStatus(str, Enum):
     GOT_GROCERIES = "got_groceries"
     NOT_ATTENDING = "not_attending"
     DONT_KNOW_YET = "dont_know_yet"
+    _UNSPECIFIED = "unspecified"
+
+    @property
+    @deprecated("Only kept for historical data.")
+    def UNSPECIFIED(self) -> "AttendanceStatus":  # pylint: disable=invalid-name
+        return AttendanceStatus._UNSPECIFIED
 
 
 class Attendance(BaseModel):
