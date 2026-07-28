@@ -14,8 +14,6 @@ from .all_settlements import AllSettlements
 from .all_settlements_subscription import AllSettlementsSubscription
 from .all_users_in_group import AllUsersInGroup
 from .all_users_in_group_subscription import AllUsersInGroupSubscription
-from .app_status import AppStatus
-from .app_status_subscription import AppStatusSubscription
 from .async_base_client import AsyncBaseClient
 from .automatic_events import AutomaticEvents
 from .base_model import UNSET, UnsetType
@@ -24,6 +22,8 @@ from .create_group import CreateGroup
 from .create_list_item import CreateListItem
 from .create_many_list_items import CreateManyListItems
 from .create_settlement import CreateSettlement
+from .get_app_status import GetAppStatus
+from .get_app_status_subscription import GetAppStatusSubscription
 from .get_attendance import GetAttendance
 from .get_attendance_subscription import GetAttendanceSubscription
 from .get_event import GetEvent
@@ -32,6 +32,11 @@ from .get_expense import GetExpense
 from .get_expense_subscription import GetExpenseSubscription
 from .get_group import GetGroup
 from .get_group_subscription import GetGroupSubscription
+from .get_group_total_expense import GetGroupTotalExpense
+from .get_group_total_expense_import_subscription import (
+    GetGroupTotalExpenseImportSubscription,
+)
+from .get_group_total_expense_subscription import GetGroupTotalExpenseSubscription
 from .get_list_item import GetListItem
 from .get_list_item_subscription import GetListItemSubscription
 from .get_settlement import GetSettlement
@@ -40,9 +45,6 @@ from .get_user import GetUser
 from .get_user_in_group import GetUserInGroup
 from .get_user_in_group_subscription import GetUserInGroupSubscription
 from .get_user_subscription import GetUserSubscription
-from .group_total_expense import GroupTotalExpense
-from .group_total_expense_import_subscription import GroupTotalExpenseImportSubscription
-from .group_total_expense_subscription import GroupTotalExpenseSubscription
 from .input_types import (
     eetschema_event_attendees_bool_exp,
     eetschema_event_attendees_insert_input,
@@ -55,6 +57,8 @@ from .input_types import (
     eetschema_expense_distribution_insert_input,
     eetschema_expense_order_by,
     eetschema_expense_set_input,
+    eetschema_group_bool_exp,
+    eetschema_group_order_by,
     eetschema_group_set_input,
     eetschema_list_bool_exp,
     eetschema_list_insert_input,
@@ -92,9 +96,9 @@ def gql(q: str) -> str:
 
 
 class GraphQlClient(AsyncBaseClient):
-    async def app_status(self, **kwargs: Any) -> AppStatus:
+    async def get_app_status(self, **kwargs: Any) -> GetAppStatus:
         query = gql("""
-            query AppStatus {
+            query GetAppStatus {
               eetschema_app_status {
                 ...AppStatusFields
               }
@@ -108,16 +112,16 @@ class GraphQlClient(AsyncBaseClient):
             """)
         variables: dict[str, object] = {}
         response = await self.execute(
-            query=query, operation_name="AppStatus", variables=variables, **kwargs
+            query=query, operation_name="GetAppStatus", variables=variables, **kwargs
         )
         data = self.get_data(response)
-        return AppStatus.model_validate(data)
+        return GetAppStatus.model_validate(data)
 
-    async def app_status_subscription(
+    async def get_app_status_subscription(
         self, **kwargs: Any
-    ) -> AsyncIterator[AppStatusSubscription]:
+    ) -> AsyncIterator[GetAppStatusSubscription]:
         query = gql("""
-            subscription AppStatusSubscription {
+            subscription GetAppStatusSubscription {
               eetschema_app_status {
                 ...AppStatusFields
               }
@@ -132,11 +136,11 @@ class GraphQlClient(AsyncBaseClient):
         variables: dict[str, object] = {}
         async for data in self.execute_ws(
             query=query,
-            operation_name="AppStatusSubscription",
+            operation_name="GetAppStatusSubscription",
             variables=variables,
             **kwargs,
         ):
-            yield AppStatusSubscription.model_validate(data)
+            yield GetAppStatusSubscription.model_validate(data)
 
     async def update_many_attendance(
         self, updates: list[eetschema_event_attendees_insert_input], **kwargs: Any
@@ -1142,11 +1146,11 @@ class GraphQlClient(AsyncBaseClient):
         data = self.get_data(response)
         return GetExpense.model_validate(data)
 
-    async def group_total_expense(
+    async def get_group_total_expense(
         self, group_id: Union[Optional[str], UnsetType] = UNSET, **kwargs: Any
-    ) -> GroupTotalExpense:
+    ) -> GetGroupTotalExpense:
         query = gql("""
-            query GroupTotalExpense($groupId: uuid) {
+            query GetGroupTotalExpense($groupId: uuid) {
               eetschema_expense_aggregate(
                 where: {group_id: {_eq: $groupId}, deleted: {_eq: false}}
               ) {
@@ -1168,12 +1172,12 @@ class GraphQlClient(AsyncBaseClient):
         variables: dict[str, object] = {"groupId": group_id}
         response = await self.execute(
             query=query,
-            operation_name="GroupTotalExpense",
+            operation_name="GetGroupTotalExpense",
             variables=variables,
             **kwargs,
         )
         data = self.get_data(response)
-        return GroupTotalExpense.model_validate(data)
+        return GetGroupTotalExpense.model_validate(data)
 
     async def all_expenses_subscription(
         self,
@@ -1275,11 +1279,11 @@ class GraphQlClient(AsyncBaseClient):
         ):
             yield GetExpenseSubscription.model_validate(data)
 
-    async def group_total_expense_subscription(
+    async def get_group_total_expense_subscription(
         self, group_id: Union[Optional[str], UnsetType] = UNSET, **kwargs: Any
-    ) -> AsyncIterator[GroupTotalExpenseSubscription]:
+    ) -> AsyncIterator[GetGroupTotalExpenseSubscription]:
         query = gql("""
-            subscription GroupTotalExpenseSubscription($groupId: uuid) {
+            subscription GetGroupTotalExpenseSubscription($groupId: uuid) {
               eetschema_expense_aggregate(
                 where: {group_id: {_eq: $groupId}, deleted: {_eq: false}}
               ) {
@@ -1294,17 +1298,17 @@ class GraphQlClient(AsyncBaseClient):
         variables: dict[str, object] = {"groupId": group_id}
         async for data in self.execute_ws(
             query=query,
-            operation_name="GroupTotalExpenseSubscription",
+            operation_name="GetGroupTotalExpenseSubscription",
             variables=variables,
             **kwargs,
         ):
-            yield GroupTotalExpenseSubscription.model_validate(data)
+            yield GetGroupTotalExpenseSubscription.model_validate(data)
 
-    async def group_total_expense_import_subscription(
+    async def get_group_total_expense_import_subscription(
         self, group_id: Union[Optional[str], UnsetType] = UNSET, **kwargs: Any
-    ) -> AsyncIterator[GroupTotalExpenseImportSubscription]:
+    ) -> AsyncIterator[GetGroupTotalExpenseImportSubscription]:
         query = gql("""
-            subscription GroupTotalExpenseImportSubscription($groupId: uuid) {
+            subscription GetGroupTotalExpenseImportSubscription($groupId: uuid) {
               eetschema_expense_eetlijst_import_aggregate(where: {group_id: {_eq: $groupId}}) {
                 aggregate {
                   sum {
@@ -1317,11 +1321,11 @@ class GraphQlClient(AsyncBaseClient):
         variables: dict[str, object] = {"groupId": group_id}
         async for data in self.execute_ws(
             query=query,
-            operation_name="GroupTotalExpenseImportSubscription",
+            operation_name="GetGroupTotalExpenseImportSubscription",
             variables=variables,
             **kwargs,
         ):
-            yield GroupTotalExpenseImportSubscription.model_validate(data)
+            yield GetGroupTotalExpenseImportSubscription.model_validate(data)
 
     async def create_many_list_items(
         self, items: list[eetschema_list_insert_input], **kwargs: Any
@@ -2008,26 +2012,22 @@ class GraphQlClient(AsyncBaseClient):
 
     async def all_groups(
         self,
-        where: Union[Optional[eetschema_users_in_group_bool_exp], UnsetType] = UNSET,
-        order: Union[
-            Optional[list[eetschema_users_in_group_order_by]], UnsetType
-        ] = UNSET,
+        where: Union[Optional[eetschema_group_bool_exp], UnsetType] = UNSET,
+        order: Union[Optional[list[eetschema_group_order_by]], UnsetType] = UNSET,
         limit: Union[Optional[int], UnsetType] = UNSET,
         include_users: Union[Optional[bool], UnsetType] = UNSET,
         include_inactive_users: Union[Optional[bool], UnsetType] = UNSET,
         **kwargs: Any,
     ) -> AllGroups:
         query = gql("""
-            query AllGroups($where: eetschema_users_in_group_bool_exp, $order: [eetschema_users_in_group_order_by!], $limit: Int, $includeUsers: Boolean = false, $includeInactiveUsers: Boolean = false) {
-              eetschema_users_in_group(where: $where, order_by: $order, limit: $limit) {
-                group {
-                  ...GroupFields
-                  users_in_groups(
-                    where: {_or: [{active: {_eq: true}}, {active: {_neq: $includeInactiveUsers}}]}
-                    order_by: {order: asc}
-                  ) @include(if: $includeUsers) {
-                    ...UserInGroupFields
-                  }
+            query AllGroups($where: eetschema_group_bool_exp, $order: [eetschema_group_order_by!], $limit: Int, $includeUsers: Boolean = false, $includeInactiveUsers: Boolean = false) {
+              eetschema_group(where: $where, order_by: $order, limit: $limit) {
+                ...GroupFields
+                users_in_groups(
+                  where: {_or: [{active: {_eq: true}}, {active: {_neq: $includeInactiveUsers}}]}
+                  order_by: {order: asc}
+                ) @include(if: $includeUsers) {
+                  ...UserInGroupFields
                 }
               }
             }
@@ -2182,26 +2182,22 @@ class GraphQlClient(AsyncBaseClient):
 
     async def all_groups_subscription(
         self,
-        where: Union[Optional[eetschema_users_in_group_bool_exp], UnsetType] = UNSET,
-        order: Union[
-            Optional[list[eetschema_users_in_group_order_by]], UnsetType
-        ] = UNSET,
+        where: Union[Optional[eetschema_group_bool_exp], UnsetType] = UNSET,
+        order: Union[Optional[list[eetschema_group_order_by]], UnsetType] = UNSET,
         limit: Union[Optional[int], UnsetType] = UNSET,
         include_users: Union[Optional[bool], UnsetType] = UNSET,
         include_inactive_users: Union[Optional[bool], UnsetType] = UNSET,
         **kwargs: Any,
     ) -> AsyncIterator[AllGroupsSubscription]:
         query = gql("""
-            subscription AllGroupsSubscription($where: eetschema_users_in_group_bool_exp, $order: [eetschema_users_in_group_order_by!], $limit: Int, $includeUsers: Boolean = false, $includeInactiveUsers: Boolean = false) {
-              eetschema_users_in_group(where: $where, order_by: $order, limit: $limit) {
-                group {
-                  ...GroupFields
-                  users_in_groups(
-                    where: {_or: [{active: {_eq: true}}, {active: {_neq: $includeInactiveUsers}}]}
-                    order_by: {order: asc}
-                  ) @include(if: $includeUsers) {
-                    ...UserInGroupFields
-                  }
+            subscription AllGroupsSubscription($where: eetschema_group_bool_exp, $order: [eetschema_group_order_by!], $limit: Int, $includeUsers: Boolean = false, $includeInactiveUsers: Boolean = false) {
+              eetschema_group(where: $where, order_by: $order, limit: $limit) {
+                ...GroupFields
+                users_in_groups(
+                  where: {_or: [{active: {_eq: true}}, {active: {_neq: $includeInactiveUsers}}]}
+                  order_by: {order: asc}
+                ) @include(if: $includeUsers) {
+                  ...UserInGroupFields
                 }
               }
             }

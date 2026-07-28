@@ -15,15 +15,13 @@ from .all_expenses_subscription import (
 )
 from .all_groups import (
     AllGroups,
-    AllGroupsEetschemaUsersInGroup,
-    AllGroupsEetschemaUsersInGroupGroup,
-    AllGroupsEetschemaUsersInGroupGroupUsersInGroups,
+    AllGroupsEetschemaGroup,
+    AllGroupsEetschemaGroupUsersInGroups,
 )
 from .all_groups_subscription import (
     AllGroupsSubscription,
-    AllGroupsSubscriptionEetschemaUsersInGroup,
-    AllGroupsSubscriptionEetschemaUsersInGroupGroup,
-    AllGroupsSubscriptionEetschemaUsersInGroupGroupUsersInGroups,
+    AllGroupsSubscriptionEetschemaGroup,
+    AllGroupsSubscriptionEetschemaGroupUsersInGroups,
 )
 from .all_settlements import AllSettlements, AllSettlementsEetschemaSettlements
 from .all_settlements_subscription import (
@@ -39,11 +37,6 @@ from .all_users_in_group_subscription import (
     AllUsersInGroupSubscription,
     AllUsersInGroupSubscriptionEetschemaGroupByPk,
     AllUsersInGroupSubscriptionEetschemaGroupByPkUsersInGroups,
-)
-from .app_status import AppStatus, AppStatusEetschemaAppStatus
-from .app_status_subscription import (
-    AppStatusSubscription,
-    AppStatusSubscriptionEetschemaAppStatus,
 )
 from .async_base_client import AsyncBaseClient
 from .automatic_events import AutomaticEvents, AutomaticEventsQueryTodaysEvents
@@ -160,6 +153,11 @@ from .fragments import (
     UserInGroupFields,
     UserInGroupFieldsUser,
 )
+from .get_app_status import GetAppStatus, GetAppStatusEetschemaAppStatus
+from .get_app_status_subscription import (
+    GetAppStatusSubscription,
+    GetAppStatusSubscriptionEetschemaAppStatus,
+)
 from .get_attendance import GetAttendance, GetAttendanceEetschemaEventAttendeesByPk
 from .get_attendance_subscription import (
     GetAttendanceSubscription,
@@ -185,6 +183,27 @@ from .get_group_subscription import (
     GetGroupSubscriptionEetschemaGroupByPk,
     GetGroupSubscriptionEetschemaGroupByPkUsersInGroups,
 )
+from .get_group_total_expense import (
+    GetGroupTotalExpense,
+    GetGroupTotalExpenseEetschemaExpenseAggregate,
+    GetGroupTotalExpenseEetschemaExpenseAggregateAggregate,
+    GetGroupTotalExpenseEetschemaExpenseAggregateAggregateSum,
+    GetGroupTotalExpenseEetschemaExpenseEetlijstImportAggregate,
+    GetGroupTotalExpenseEetschemaExpenseEetlijstImportAggregateAggregate,
+    GetGroupTotalExpenseEetschemaExpenseEetlijstImportAggregateAggregateSum,
+)
+from .get_group_total_expense_import_subscription import (
+    GetGroupTotalExpenseImportSubscription,
+    GetGroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregate,
+    GetGroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregateAggregate,
+    GetGroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregateAggregateSum,
+)
+from .get_group_total_expense_subscription import (
+    GetGroupTotalExpenseSubscription,
+    GetGroupTotalExpenseSubscriptionEetschemaExpenseAggregate,
+    GetGroupTotalExpenseSubscriptionEetschemaExpenseAggregateAggregate,
+    GetGroupTotalExpenseSubscriptionEetschemaExpenseAggregateAggregateSum,
+)
 from .get_list_item import GetListItem, GetListItemEetschemaListByPk
 from .get_list_item_subscription import (
     GetListItemSubscription,
@@ -209,27 +228,6 @@ from .get_user_in_group_subscription import (
 from .get_user_subscription import (
     GetUserSubscription,
     GetUserSubscriptionEetschemaUserPrivate,
-)
-from .group_total_expense import (
-    GroupTotalExpense,
-    GroupTotalExpenseEetschemaExpenseAggregate,
-    GroupTotalExpenseEetschemaExpenseAggregateAggregate,
-    GroupTotalExpenseEetschemaExpenseAggregateAggregateSum,
-    GroupTotalExpenseEetschemaExpenseEetlijstImportAggregate,
-    GroupTotalExpenseEetschemaExpenseEetlijstImportAggregateAggregate,
-    GroupTotalExpenseEetschemaExpenseEetlijstImportAggregateAggregateSum,
-)
-from .group_total_expense_import_subscription import (
-    GroupTotalExpenseImportSubscription,
-    GroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregate,
-    GroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregateAggregate,
-    GroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregateAggregateSum,
-)
-from .group_total_expense_subscription import (
-    GroupTotalExpenseSubscription,
-    GroupTotalExpenseSubscriptionEetschemaExpenseAggregate,
-    GroupTotalExpenseSubscriptionEetschemaExpenseAggregateAggregate,
-    GroupTotalExpenseSubscriptionEetschemaExpenseAggregateAggregateSum,
 )
 from .input_types import (
     Boolean_comparison_exp,
@@ -681,13 +679,11 @@ __all__ = [
     "AllExpensesSubscription",
     "AllExpensesSubscriptionEetschemaExpense",
     "AllGroups",
-    "AllGroupsEetschemaUsersInGroup",
-    "AllGroupsEetschemaUsersInGroupGroup",
-    "AllGroupsEetschemaUsersInGroupGroupUsersInGroups",
+    "AllGroupsEetschemaGroup",
+    "AllGroupsEetschemaGroupUsersInGroups",
     "AllGroupsSubscription",
-    "AllGroupsSubscriptionEetschemaUsersInGroup",
-    "AllGroupsSubscriptionEetschemaUsersInGroupGroup",
-    "AllGroupsSubscriptionEetschemaUsersInGroupGroupUsersInGroups",
+    "AllGroupsSubscriptionEetschemaGroup",
+    "AllGroupsSubscriptionEetschemaGroupUsersInGroups",
     "AllSettlements",
     "AllSettlementsEetschemaSettlements",
     "AllSettlementsSubscription",
@@ -698,11 +694,7 @@ __all__ = [
     "AllUsersInGroupSubscription",
     "AllUsersInGroupSubscriptionEetschemaGroupByPk",
     "AllUsersInGroupSubscriptionEetschemaGroupByPkUsersInGroups",
-    "AppStatus",
-    "AppStatusEetschemaAppStatus",
     "AppStatusFields",
-    "AppStatusSubscription",
-    "AppStatusSubscriptionEetschemaAppStatus",
     "AsyncBaseClient",
     "AttendanceFields",
     "AttendanceFieldsLinkedEvent",
@@ -733,6 +725,10 @@ __all__ = [
     "ExpenseFieldsPayedBy",
     "ExpenseFieldsUpdatedBy",
     "Float_comparison_exp",
+    "GetAppStatus",
+    "GetAppStatusEetschemaAppStatus",
+    "GetAppStatusSubscription",
+    "GetAppStatusSubscriptionEetschemaAppStatus",
     "GetAttendance",
     "GetAttendanceEetschemaEventAttendeesByPk",
     "GetAttendanceSubscription",
@@ -751,6 +747,21 @@ __all__ = [
     "GetGroupSubscription",
     "GetGroupSubscriptionEetschemaGroupByPk",
     "GetGroupSubscriptionEetschemaGroupByPkUsersInGroups",
+    "GetGroupTotalExpense",
+    "GetGroupTotalExpenseEetschemaExpenseAggregate",
+    "GetGroupTotalExpenseEetschemaExpenseAggregateAggregate",
+    "GetGroupTotalExpenseEetschemaExpenseAggregateAggregateSum",
+    "GetGroupTotalExpenseEetschemaExpenseEetlijstImportAggregate",
+    "GetGroupTotalExpenseEetschemaExpenseEetlijstImportAggregateAggregate",
+    "GetGroupTotalExpenseEetschemaExpenseEetlijstImportAggregateAggregateSum",
+    "GetGroupTotalExpenseImportSubscription",
+    "GetGroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregate",
+    "GetGroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregateAggregate",
+    "GetGroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregateAggregateSum",
+    "GetGroupTotalExpenseSubscription",
+    "GetGroupTotalExpenseSubscriptionEetschemaExpenseAggregate",
+    "GetGroupTotalExpenseSubscriptionEetschemaExpenseAggregateAggregate",
+    "GetGroupTotalExpenseSubscriptionEetschemaExpenseAggregateAggregateSum",
     "GetListItem",
     "GetListItemEetschemaListByPk",
     "GetListItemSubscription",
@@ -777,21 +788,6 @@ __all__ = [
     "GraphQlClient",
     "GroupFields",
     "GroupFieldsSummary",
-    "GroupTotalExpense",
-    "GroupTotalExpenseEetschemaExpenseAggregate",
-    "GroupTotalExpenseEetschemaExpenseAggregateAggregate",
-    "GroupTotalExpenseEetschemaExpenseAggregateAggregateSum",
-    "GroupTotalExpenseEetschemaExpenseEetlijstImportAggregate",
-    "GroupTotalExpenseEetschemaExpenseEetlijstImportAggregateAggregate",
-    "GroupTotalExpenseEetschemaExpenseEetlijstImportAggregateAggregateSum",
-    "GroupTotalExpenseImportSubscription",
-    "GroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregate",
-    "GroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregateAggregate",
-    "GroupTotalExpenseImportSubscriptionEetschemaExpenseEetlijstImportAggregateAggregateSum",
-    "GroupTotalExpenseSubscription",
-    "GroupTotalExpenseSubscriptionEetschemaExpenseAggregate",
-    "GroupTotalExpenseSubscriptionEetschemaExpenseAggregateAggregate",
-    "GroupTotalExpenseSubscriptionEetschemaExpenseAggregateAggregateSum",
     "Int_comparison_exp",
     "JoinGroup",
     "JoinGroupJoinGroup",

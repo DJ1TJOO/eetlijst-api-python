@@ -1,32 +1,21 @@
 from dataclasses import dataclass
 
 from eetlijst_py.generated.base_model import UNSET, UnsetType
-from eetlijst_py.generated.input_types import (
-    eetschema_event_attendees_bool_exp,
-    eetschema_event_attendees_insert_input,
-    eetschema_event_attendees_order_by,
-    eetschema_event_attendees_set_input,
-)
 
 from eetlijst_py.services.base import BaseService
+from eetlijst_py.services.event_attendance.types import (
+    AttendEvent,
+    CreateEventAttendee,
+    OrderEventAttendee,
+    UpdateAttendance,
+    WhereEventAttendee,
+)
 
 from .transformers import (
-    AttendanceStatus,
     transform_attendance,
     transform_update_attendance,
     transform_update_many_attendance,
 )
-
-
-class EventAttendceAttend(eetschema_event_attendees_insert_input):
-    user_id: str
-    event_id: str
-    status: AttendanceStatus
-
-
-class EventAttendceUpdate(eetschema_event_attendees_set_input):
-    user_id: str
-    event_id: str
 
 
 @dataclass
@@ -55,8 +44,8 @@ class EventAttendance(BaseService):
 
     async def all(
         self,
-        where: eetschema_event_attendees_bool_exp | UnsetType | None = UNSET,
-        order: list[eetschema_event_attendees_order_by] | UnsetType | None = UNSET,
+        where: WhereEventAttendee | UnsetType | None = UNSET,
+        order: list[OrderEventAttendee] | UnsetType | None = UNSET,
         limit: int | UnsetType | None = UNSET,
     ):
         result = await self._client.all_attendances(
@@ -72,8 +61,8 @@ class EventAttendance(BaseService):
 
     async def all_subscription(
         self,
-        where: eetschema_event_attendees_bool_exp | UnsetType | None = UNSET,
-        order: list[eetschema_event_attendees_order_by] | UnsetType | None = UNSET,
+        where: WhereEventAttendee | UnsetType | None = UNSET,
+        order: list[OrderEventAttendee] | UnsetType | None = UNSET,
         limit: int | UnsetType | None = UNSET,
     ):
         async for result in self._client.all_attendances_subscription(
@@ -88,10 +77,10 @@ class EventAttendance(BaseService):
                     for attendee in result.eetschema_event_attendees
                 ]
 
-    async def attend(self, data: EventAttendceAttend):
+    async def attend(self, data: AttendEvent):
         return await self.update_many([data])
 
-    async def update(self, data: EventAttendceUpdate):
+    async def update(self, data: UpdateAttendance):
         result = await self._client.update_attendance(
             data.event_id,
             data.user_id,
@@ -100,7 +89,7 @@ class EventAttendance(BaseService):
         )
         return transform_update_attendance(result)
 
-    async def update_many(self, data: list[eetschema_event_attendees_insert_input]):
+    async def update_many(self, data: list[CreateEventAttendee]):
         result = await self._client.update_many_attendance(
             data,
             headers=self._get_headers(),
@@ -109,7 +98,7 @@ class EventAttendance(BaseService):
 
     async def comment(self, user_id: str, event_id: str, comment: str | None):
         return await self.update(
-            EventAttendceUpdate(
+            UpdateAttendance(
                 user_id=user_id,
                 event_id=event_id,
                 comment=comment,
@@ -118,7 +107,7 @@ class EventAttendance(BaseService):
 
     async def status(self, user_id: str, event_id: str, status: str | None):
         return await self.update(
-            EventAttendceUpdate(
+            UpdateAttendance(
                 user_id=user_id,
                 event_id=event_id,
                 status=status,
@@ -128,7 +117,7 @@ class EventAttendance(BaseService):
 
     async def guests(self, user_id: str, event_id: str, guests: int | None):
         return await self.update(
-            EventAttendceUpdate(
+            UpdateAttendance(
                 user_id=user_id,
                 event_id=event_id,
                 number_guests=guests,

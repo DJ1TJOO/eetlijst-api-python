@@ -5,10 +5,6 @@ from eetlijst_py.generated import order_by
 from eetlijst_py.generated.input_types import (
     Boolean_comparison_exp,
     String_comparison_exp,
-    eetschema_users_in_group_bool_exp,
-    eetschema_users_in_group_order_by,
-    eetschema_users_in_group_set_input,
-    eetschema_users_in_group_updates,
     uuid_comparison_exp,
 )
 
@@ -19,6 +15,12 @@ from eetlijst_py.services.group_users.transformers import (
     transform_join_group,
     transform_update_user_in_group,
     transform_update_users_in_group,
+)
+from eetlijst_py.services.group_users.types import (
+    OrderUserInGroup,
+    UpdateUserInGroup,
+    UpdateUsersInGroup,
+    WhereUserInGroup,
 )
 
 from eetlijst_py.utils.params import build_where, default_order
@@ -54,12 +56,12 @@ class GroupUsers(BaseService):
         self,
         group_id: str,
         include_inactive_users: bool = False,
-        where: Optional[eetschema_users_in_group_bool_exp] = None,
-        order: Optional[list[eetschema_users_in_group_order_by]] = None,
+        where: Optional[WhereUserInGroup] = None,
+        order: Optional[list[OrderUserInGroup]] = None,
         limit: Optional[int] = None,
     ):
         where_data = build_where(
-            eetschema_users_in_group_bool_exp,
+            WhereUserInGroup,
             where,
             group_id=uuid_comparison_exp(_eq=group_id),
             active=None if include_inactive_users else Boolean_comparison_exp(_eq=True),
@@ -67,7 +69,7 @@ class GroupUsers(BaseService):
 
         order_data = default_order(
             order,
-            eetschema_users_in_group_order_by(order=order_by.asc),
+            OrderUserInGroup(order=order_by.asc),
         )
 
         result = await self._client.all_users_in_group(
@@ -84,12 +86,12 @@ class GroupUsers(BaseService):
         self,
         group_id: str,
         include_inactive_users: bool = False,
-        where: Optional[eetschema_users_in_group_bool_exp] = None,
-        order: Optional[list[eetschema_users_in_group_order_by]] = None,
+        where: Optional[WhereUserInGroup] = None,
+        order: Optional[list[OrderUserInGroup]] = None,
         limit: Optional[int] = None,
     ):
         where_data = build_where(
-            eetschema_users_in_group_bool_exp,
+            WhereUserInGroup,
             where,
             group_id=uuid_comparison_exp(_eq=group_id),
             active=None if include_inactive_users else Boolean_comparison_exp(_eq=True),
@@ -97,7 +99,7 @@ class GroupUsers(BaseService):
 
         order_data = default_order(
             order,
-            eetschema_users_in_group_order_by(order=order_by.asc),
+            OrderUserInGroup(order=order_by.asc),
         )
 
         async for result in self._client.all_users_in_group_subscription(
@@ -123,7 +125,7 @@ class GroupUsers(BaseService):
         self,
         group_id: str,
         user_id: str,
-        data: eetschema_users_in_group_set_input,
+        data: UpdateUserInGroup,
     ):
         result = await self._client.update_user_in_group(
             group_id=group_id,
@@ -136,7 +138,7 @@ class GroupUsers(BaseService):
 
     async def update_many(
         self,
-        updates: list[eetschema_users_in_group_updates],
+        updates: list[UpdateUsersInGroup],
     ):
         result = await self._client.update_users_in_group(
             updates=updates,
@@ -148,7 +150,7 @@ class GroupUsers(BaseService):
         return await self.update(
             group_id=group_id,
             user_id=user_id,
-            data=eetschema_users_in_group_set_input(active=False),
+            data=UpdateUserInGroup(active=False),
         )
 
     async def order(
@@ -157,7 +159,7 @@ class GroupUsers(BaseService):
         user_order: list[Union[str, UserOrderItem]],
         offset: int = 0,
     ):
-        updates: list[eetschema_users_in_group_updates] = []
+        updates: list[UpdateUsersInGroup] = []
 
         for index, item in enumerate(user_order):
             if isinstance(item, str):
@@ -168,12 +170,12 @@ class GroupUsers(BaseService):
                 target_order = item["order"] + offset
 
             updates.append(
-                eetschema_users_in_group_updates(
-                    where=eetschema_users_in_group_bool_exp(
+                UpdateUsersInGroup(
+                    where=WhereUserInGroup(
                         group_id=uuid_comparison_exp(_eq=group_id),
                         user_id=String_comparison_exp(_eq=target_user_id),
                     ),
-                    _set=eetschema_users_in_group_set_input(order=target_order),
+                    _set=UpdateUserInGroup(order=target_order),
                 )
             )
 

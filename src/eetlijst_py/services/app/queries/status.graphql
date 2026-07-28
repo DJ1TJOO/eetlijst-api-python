@@ -1,4 +1,4 @@
-query AppStatus {
+query GetAppStatus {
 	eetschema_app_status {
 		...AppStatusFields
 	}

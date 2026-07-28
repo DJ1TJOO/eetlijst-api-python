@@ -1,7 +1,4 @@
-﻿from datetime import datetime
-from typing import Optional
-
-from pydantic import BaseModel
+﻿from typing import Optional, Sequence
 
 from eetlijst_py.generated.all_groups import AllGroups
 from eetlijst_py.generated.all_groups_subscription import AllGroupsSubscription
@@ -13,54 +10,23 @@ from eetlijst_py.generated.update_group import UpdateGroup
 
 from eetlijst_py.exceptions import EetlijstException
 
-from eetlijst_py.services.event_attendance.transformers import AttendanceStatus
-from eetlijst_py.services.users.transformers import UserResult, transform_user
-
-
-class GroupSummaryResult(BaseModel):
-    payed_total: float
-    user_id: str
-
-
-class UserInGroupResult(BaseModel):
-    active: bool
-    order: Optional[int]
-    start_holliday: Optional[datetime]
-    end_holliday: Optional[datetime]
-    monday: Optional[AttendanceStatus]
-    tuesday: Optional[AttendanceStatus]
-    wednesday: Optional[AttendanceStatus]
-    thursday: Optional[AttendanceStatus]
-    friday: Optional[AttendanceStatus]
-    saturday: Optional[AttendanceStatus]
-    sunday: Optional[AttendanceStatus]
-    user: UserResult
-
-
-class GroupResult(BaseModel):
-    id: str
-    name: str
-    default_close_time: Optional[datetime]
-    created_at: datetime
-    created_at_eetlijst: Optional[datetime]
-    statistics_start_date: Optional[datetime]
-    statistics_end_date: Optional[datetime]
-    invite_uuid: str
-    invite_open: bool
-    description: Optional[str]
-    summary: list[GroupSummaryResult]
-    users: list[UserInGroupResult]
+from eetlijst_py.services.groups.types import (
+    Group,
+    GroupSummary,
+    UserInGroup,
+)
+from eetlijst_py.services.users.transformers import transform_user
 
 
 def transform_group(
     group: Optional[GroupFields],
-    users: Optional[list[UserInGroupResult]] = None,
-) -> GroupResult:
+    users: Optional[list[UserInGroup]] = None,
+) -> Group:
     if not group:
         raise EetlijstException("Group not found")
 
     filtered_summary = [
-        GroupSummaryResult(
+        GroupSummary(
             payed_total=float(entry.payed_total),
             user_id=entry.user_id,
         )
@@ -69,7 +35,7 @@ def transform_group(
     ]
 
     group_data = group.model_dump(exclude={"summary"})
-    return GroupResult(
+    return Group(
         **group_data,
         summary=filtered_summary,
         users=users or [],
@@ -78,65 +44,56 @@ def transform_group(
 
 def transform_user_in_group(
     user_in_group: Optional[UserInGroupFields],
-) -> UserInGroupResult:
+) -> UserInGroup:
     if not user_in_group:
         raise EetlijstException("User in group not found")
 
     user_data = transform_user(user_in_group.user)
     data = user_in_group.model_dump(exclude={"user"})
 
-    return UserInGroupResult(
+    return UserInGroup(
         **data,
         user=user_data,
     )
 
 
-def transform_create_group(result: CreateGroup) -> GroupResult:
+def transform_create_group(result: CreateGroup) -> Group:
     if not result.group:
         raise EetlijstException("Failed to create group")
 
     return transform_group(result.group)
 
 
-def transform_update_group(result: UpdateGroup) -> GroupResult:
+def transform_update_group(result: UpdateGroup) -> Group:
     if not result.group:
         raise EetlijstException("Failed to update group")
 
     return transform_group(result.group)
 
 
+def transform_users_in_group(
+    users_in_groups: Sequence[UserInGroupFields] | None,
+) -> list[UserInGroup]:
+    if not users_in_groups:
+        return []
+
+    return [transform_user_in_group(user) for user in users_in_groups]
+
+
 def transform_all_groups(
     result: AllGroups | AllGroupsSubscription,
-) -> list[GroupResult]:
-    transformed_groups: list[GroupResult] = []
-    for user_in_group in result.eetschema_users_in_group:
-        if not user_in_group.group:
-            continue
-
-        users = (
-            [transform_user_in_group(u) for u in user_in_group.group.users_in_groups]
-            if user_in_group.group.users_in_groups
-            else []
-        )
-
-        transformed_groups.append(transform_group(user_in_group.group, users=users))
-
-    return transformed_groups
+) -> list[Group]:
+    return [
+        transform_group(group, users=transform_users_in_group(group.users_in_groups))
+        for group in result.eetschema_group
+    ]
 
 
 def transform_get_group(
     result: GetGroup | GetGroupSubscription,
-) -> GroupResult:
+) -> Group:
     if not result.eetschema_group_by_pk:
         raise EetlijstException("Failed to get group")
 
-    users = (
-        [
-            transform_user_in_group(u)
-            for u in result.eetschema_group_by_pk.users_in_groups
-        ]
-        if result.eetschema_group_by_pk.users_in_groups
-        else []
-    )
-
-    return transform_group(result.eetschema_group_by_pk, users=users)
+    group = result.eetschema_group_by_pk
+    return transform_group(group, users=transform_users_in_group(group.users_in_groups))

@@ -7,8 +7,10 @@ from eetlijst_py.generated.update_list_item import UpdateListItem
 
 from eetlijst_py.exceptions import EetlijstException
 
+from eetlijst_py.services.group_list.types import ListItem
 
-def transform_list_item(item: Optional[ListItemFields]) -> ListItemFields:
+
+def transform_list_item(item: Optional[ListItemFields]) -> ListItem:
     if not item:
         raise EetlijstException("List item not found")
 

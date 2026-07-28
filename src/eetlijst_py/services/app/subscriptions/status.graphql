@@ -1,4 +1,4 @@
-subscription AppStatusSubscription {
+subscription GetAppStatusSubscription {
 	eetschema_app_status {
 		...AppStatusFields
 	}

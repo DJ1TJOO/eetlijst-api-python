@@ -1,4 +1,4 @@
-subscription GroupTotalExpenseSubscription($groupId: uuid) {
+subscription GetGroupTotalExpenseSubscription($groupId: uuid) {
 	eetschema_expense_aggregate(
 		where: { group_id: { _eq: $groupId }, deleted: { _eq: false } }
 	) {
@@ -10,7 +10,7 @@ subscription GroupTotalExpenseSubscription($groupId: uuid) {
 	}
 }
 
-subscription GroupTotalExpenseImportSubscription($groupId: uuid) {
+subscription GetGroupTotalExpenseImportSubscription($groupId: uuid) {
 	eetschema_expense_eetlijst_import_aggregate(
 		where: { group_id: { _eq: $groupId } }
 	) {

@@ -3,19 +3,14 @@ from dataclasses import dataclass
 from typing import AsyncIterator, Optional
 
 from eetlijst_py.generated import order_by
-from eetlijst_py.generated.group_total_expense_import_subscription import (
-    GroupTotalExpenseImportSubscription,
+from eetlijst_py.generated.get_group_total_expense_import_subscription import (
+    GetGroupTotalExpenseImportSubscription,
 )
-from eetlijst_py.generated.group_total_expense_subscription import (
-    GroupTotalExpenseSubscription,
+from eetlijst_py.generated.get_group_total_expense_subscription import (
+    GetGroupTotalExpenseSubscription,
 )
 from eetlijst_py.generated.input_types import (
     Boolean_comparison_exp,
-    eetschema_expense_bool_exp,
-    eetschema_expense_distribution_insert_input,
-    eetschema_expense_insert_input,
-    eetschema_expense_order_by,
-    eetschema_expense_set_input,
     uuid_comparison_exp,
 )
 
@@ -26,6 +21,13 @@ from eetlijst_py.services.expenses.transformers import (
     transform_group_total_expense,
     transform_group_total_expense_subscription,
     transform_update_expense,
+)
+from eetlijst_py.services.expenses.types import (
+    CreateExpense,
+    CreateExpenseDistribution,
+    OrderExpense,
+    UpdateExpense,
+    WhereExpense,
 )
 from eetlijst_py.services.settlements import Settlements
 
@@ -55,19 +57,19 @@ class Expenses(BaseService):
     async def all(
         self,
         group_id: str,
-        where: Optional[eetschema_expense_bool_exp] = None,
-        order: Optional[list[eetschema_expense_order_by]] = None,
+        where: Optional[WhereExpense] = None,
+        order: Optional[list[OrderExpense]] = None,
         limit: Optional[int] = None,
     ):
         where_data = build_where(
-            eetschema_expense_bool_exp,
+            WhereExpense,
             where,
             deleted=Boolean_comparison_exp(_eq=False),
             group_id=uuid_comparison_exp(_eq=group_id),
         )
         order_data = default_order(
             order,
-            eetschema_expense_order_by(created_at=order_by.asc),
+            OrderExpense(created_at=order_by.asc),
         )
 
         result = await self._client.all_expenses(
@@ -82,19 +84,19 @@ class Expenses(BaseService):
     async def all_subscription(
         self,
         group_id: str,
-        where: Optional[eetschema_expense_bool_exp] = None,
-        order: Optional[list[eetschema_expense_order_by]] = None,
+        where: Optional[WhereExpense] = None,
+        order: Optional[list[OrderExpense]] = None,
         limit: Optional[int] = None,
     ):
         where_data = build_where(
-            eetschema_expense_bool_exp,
+            WhereExpense,
             where,
             deleted=Boolean_comparison_exp(_eq=False),
             group_id=uuid_comparison_exp(_eq=group_id),
         )
         order_data = default_order(
             order,
-            eetschema_expense_order_by(created_at=order_by.asc),
+            OrderExpense(created_at=order_by.asc),
         )
 
         async for result in self._client.all_expenses_subscription(
@@ -108,11 +110,11 @@ class Expenses(BaseService):
                     transform_expense(expense) for expense in result.eetschema_expense
                 ]
 
-    async def create(self, data: eetschema_expense_insert_input):
+    async def create(self, data: CreateExpense):
         result = await self._client.create_expense(*data, headers=self._get_headers())
         return transform_create_expense(result)
 
-    async def update(self, expense_id: str, data: eetschema_expense_set_input):
+    async def update(self, expense_id: str, data: UpdateExpense):
         result = await self._client.update_expense(
             expense_id=expense_id,
             set_=data,
@@ -124,7 +126,7 @@ class Expenses(BaseService):
     async def update_distribution(
         self,
         expense_id: str,
-        data: list[eetschema_expense_distribution_insert_input],
+        data: list[CreateExpenseDistribution],
     ):
         await self._client.update_expense_distribution(
             expense_id=expense_id,
@@ -135,26 +137,26 @@ class Expenses(BaseService):
     async def delete(self, expense_id: str):
         return await self.update(
             expense_id=expense_id,
-            data=eetschema_expense_set_input(deleted=True),
+            data=UpdateExpense(deleted=True),
         )
 
     async def group_total(self, group_id: str):
-        result = await self._client.group_total_expense(
+        result = await self._client.get_group_total_expense(
             group_id=group_id,
             headers=self._get_headers(),
         )
         return transform_group_total_expense(result)
 
     async def group_total_subscription(self, group_id: str):
-        expense_subscription = self._client.group_total_expense_subscription(
+        expense_subscription = self._client.get_group_total_expense_subscription(
             group_id=group_id, headers=self._get_ws_headers()
         )
-        import_subscription = self._client.group_total_expense_import_subscription(
+        import_subscription = self._client.get_group_total_expense_import_subscription(
             group_id=group_id, headers=self._get_ws_headers()
         )
 
         type QueuePayload = (
-            GroupTotalExpenseSubscription | GroupTotalExpenseImportSubscription
+            GetGroupTotalExpenseSubscription | GetGroupTotalExpenseImportSubscription
         )
         queue: Queue[QueuePayload] = Queue()
 
@@ -168,16 +170,16 @@ class Expenses(BaseService):
         expense_task = create_task(listen(expense_subscription))
         import_task = create_task(listen(import_subscription))
 
-        expenses: Optional[GroupTotalExpenseSubscription] = None
-        imported: Optional[GroupTotalExpenseImportSubscription] = None
+        expenses: Optional[GetGroupTotalExpenseSubscription] = None
+        imported: Optional[GetGroupTotalExpenseImportSubscription] = None
 
         try:
             while True:
                 data = await queue.get()
 
-                if isinstance(data, GroupTotalExpenseSubscription):
+                if isinstance(data, GetGroupTotalExpenseSubscription):
                     expenses = data
-                elif isinstance(data, GroupTotalExpenseImportSubscription):
+                elif isinstance(data, GetGroupTotalExpenseImportSubscription):
                     imported = data
 
                 yield transform_group_total_expense_subscription(expenses, imported)

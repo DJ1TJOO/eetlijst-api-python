@@ -1,7 +1,4 @@
-﻿from datetime import datetime
-from typing import Optional
-
-from pydantic import BaseModel
+﻿from typing import Optional
 
 from eetlijst_py.generated.fragments import UserFields, UserFieldsPrivate
 from eetlijst_py.generated.get_user import GetUser
@@ -14,32 +11,10 @@ from eetlijst_py.generated.update_user import UpdateUser
 
 from eetlijst_py.exceptions import EetlijstException
 
-
-class CookPointsImportResult(BaseModel):
-    cook_points: float
-    allowed_to_edit: bool
+from eetlijst_py.services.users.types import CookPointsImport, User, UserPrivate
 
 
-class UserResult(BaseModel):
-    id: str
-    name: str
-    origin: Optional[str]
-    email: Optional[str]
-    allergies: list[str]
-    birthday: Optional[datetime]
-    profile_image: Optional[str]
-    profile_image_url: Optional[str]
-    order_of_buttom_bar: Optional[list[str]]
-    wants_to_recieve_notifications: bool
-    funnel_lead: Optional[list[str]]
-    cook_points_imports: list[CookPointsImportResult]
-
-
-class UserPrivateResult(UserFieldsPrivate):
-    profile_image_url: Optional[str] = None
-
-
-def transform_user_private(user: Optional[UserFieldsPrivate]) -> UserPrivateResult:
+def transform_user_private(user: Optional[UserFieldsPrivate]) -> UserPrivate:
     if not user:
         raise EetlijstException("User not found")
 
@@ -49,13 +24,13 @@ def transform_user_private(user: Optional[UserFieldsPrivate]) -> UserPrivateResu
         else None
     )
 
-    return UserPrivateResult(
+    return UserPrivate(
         **user.model_dump(),
         profile_image_url=profile_image_url,
     )
 
 
-def transform_user(user: Optional[UserFields]) -> UserResult:
+def transform_user(user: Optional[UserFields]) -> User:
     if not user:
         raise EetlijstException("User not found")
 
@@ -66,7 +41,7 @@ def transform_user(user: Optional[UserFields]) -> UserResult:
     )
 
     cook_points_imports = [
-        CookPointsImportResult(
+        CookPointsImport(
             cook_points=entry.cook_points,
             allowed_to_edit=entry.allowed_to_edit,
         )
@@ -76,21 +51,21 @@ def transform_user(user: Optional[UserFields]) -> UserResult:
 
     user_data = user.model_dump(exclude={"cook_points_imports"})
 
-    return UserResult(
+    return User(
         **user_data,
         profile_image_url=profile_image_url,
         cook_points_imports=cook_points_imports,
     )
 
 
-def transform_get_user(result: GetUser | GetUserSubscription) -> UserPrivateResult:
+def transform_get_user(result: GetUser | GetUserSubscription) -> UserPrivate:
     if not result.eetschema_user_private or len(result.eetschema_user_private) == 0:
         raise EetlijstException("User not found")
 
     return transform_user_private(result.eetschema_user_private[0])
 
 
-def transform_update_user(result: UpdateUser) -> UserResult:
+def transform_update_user(result: UpdateUser) -> User:
     if not result.update_eetschema_user_by_pk:
         raise EetlijstException("Failed to update user")
 

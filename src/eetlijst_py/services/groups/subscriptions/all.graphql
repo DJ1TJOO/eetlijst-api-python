@@ -1,24 +1,22 @@
 subscription AllGroupsSubscription(
-	$where: eetschema_users_in_group_bool_exp
-	$order: [eetschema_users_in_group_order_by!]
+	$where: eetschema_group_bool_exp
+	$order: [eetschema_group_order_by!]
 	$limit: Int
 	$includeUsers: Boolean = false
 	$includeInactiveUsers: Boolean = false
 ) {
-	eetschema_users_in_group(where: $where, order_by: $order, limit: $limit) {
-		group {
-			...GroupFields
-			users_in_groups(
-				where: {
-					_or: [
-						{ active: { _eq: true } }
-						{ active: { _neq: $includeInactiveUsers } }
-					]
-				}
-				order_by: { order: asc }
-			) @include(if: $includeUsers) {
-				...UserInGroupFields
+	eetschema_group(where: $where, order_by: $order, limit: $limit) {
+		...GroupFields
+		users_in_groups(
+			where: {
+				_or: [
+					{ active: { _eq: true } }
+					{ active: { _neq: $includeInactiveUsers } }
+				]
 			}
+			order_by: { order: asc }
+		) @include(if: $includeUsers) {
+			...UserInGroupFields
 		}
 	}
 }

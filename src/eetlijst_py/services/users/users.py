@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
 from eetlijst_py.generated.base_model import UNSET, UnsetType
-from eetlijst_py.generated.input_types import eetschema_user_set_input
 
 from eetlijst_py.services.base import BaseService
+from eetlijst_py.services.users.types import UpdateUser
 
 from .transformers import (
     transform_get_user,
@@ -29,7 +29,7 @@ class Users(BaseService):
         ):
             yield transform_get_user(result)
 
-    async def update(self, user_id: str, data: eetschema_user_set_input):
+    async def update(self, user_id: str, data: UpdateUser):
         result = await self._client.update_user(
             user_id=user_id,
             set_=data,

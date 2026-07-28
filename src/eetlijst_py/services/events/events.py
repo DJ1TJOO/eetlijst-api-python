@@ -3,14 +3,16 @@ from datetime import datetime
 
 from eetlijst_py.generated import order_by
 from eetlijst_py.generated.input_types import (
-    eetschema_event_bool_exp,
-    eetschema_event_order_by,
-    eetschema_event_set_input,
     uuid_comparison_exp,
 )
 
 from eetlijst_py.services.base import BaseService
 from eetlijst_py.services.event_attendance import EventAttendance
+from eetlijst_py.services.events.types import (
+    OrderEvent,
+    UpdateEvent,
+    WhereEvent,
+)
 
 from eetlijst_py.utils.datetime import current_datetime, format_date
 from eetlijst_py.utils.params import build_where, default_order
@@ -66,20 +68,20 @@ class Events(BaseService):
     async def all(
         self,
         group_id: str,
-        where: eetschema_event_bool_exp | None = None,
-        order: list[eetschema_event_order_by] | None = None,
+        where: WhereEvent | None = None,
+        order: list[OrderEvent] | None = None,
         limit: int | None = None,
         include_attendees: bool = False,
         include_expenses: bool = False,
     ):
         where_data = build_where(
-            eetschema_event_bool_exp,
+            WhereEvent,
             where,
             group_id=uuid_comparison_exp(_eq=group_id),
         )
         order_data = default_order(
             order,
-            eetschema_event_order_by(start_date=order_by.asc),
+            OrderEvent(start_date=order_by.asc),
         )
 
         result = await self._client.all_events(
@@ -95,20 +97,20 @@ class Events(BaseService):
     async def all_subscription(
         self,
         group_id: str,
-        where: eetschema_event_bool_exp | None = None,
-        order: list[eetschema_event_order_by] | None = None,
+        where: WhereEvent | None = None,
+        order: list[OrderEvent] | None = None,
         limit: int | None = None,
         include_attendees: bool = False,
         include_expenses: bool = False,
     ):
         where_data = build_where(
-            eetschema_event_bool_exp,
+            WhereEvent,
             where,
             group_id=uuid_comparison_exp(_eq=group_id),
         )
         order_data = default_order(
             order,
-            eetschema_event_order_by(start_date=order_by.asc),
+            OrderEvent(start_date=order_by.asc),
         )
 
         async for result in self._client.all_events_subscription(
@@ -125,7 +127,7 @@ class Events(BaseService):
     async def update(
         self,
         event_id: str,
-        data: eetschema_event_set_input,
+        data: UpdateEvent,
         include_attendees: bool = False,
         include_expenses: bool = False,
     ):
@@ -147,7 +149,7 @@ class Events(BaseService):
     ):
         return await self.update(
             event_id,
-            eetschema_event_set_input(
+            UpdateEvent(
                 open=False,
                 changed_signup_time=True,
                 closed_by=closed_by,
@@ -165,7 +167,7 @@ class Events(BaseService):
     ):
         return await self.update(
             event_id,
-            eetschema_event_set_input(
+            UpdateEvent(
                 open=True,
                 changed_signup_time=True,
                 signup_deadline=current_datetime(),
@@ -184,7 +186,7 @@ class Events(BaseService):
     ):
         return await self.update(
             event_id,
-            eetschema_event_set_input(
+            UpdateEvent(
                 open=False,
                 changed_signup_time=True,
                 closed_by=closed_by,

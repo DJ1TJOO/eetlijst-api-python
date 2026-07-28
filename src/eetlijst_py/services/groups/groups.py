@@ -1,23 +1,23 @@
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, AsyncIterator, List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from eetlijst_py.generated import order_by
 from eetlijst_py.generated.input_types import (
     String_comparison_exp,
-    eetschema_group_order_by,
-    eetschema_group_set_input,
-    eetschema_users_in_group_bool_exp,
-    eetschema_users_in_group_order_by,
 )
 
 from eetlijst_py.services.base import BaseService
 from eetlijst_py.services.group_list import GroupList
 from eetlijst_py.services.groups.transformers import (
-    GroupResult,
     transform_all_groups,
     transform_create_group,
     transform_get_group,
     transform_update_group,
+)
+from eetlijst_py.services.groups.types import (
+    OrderGroup,
+    UpdateGroup,
+    WhereGroup,
 )
 
 from eetlijst_py.utils.params import build_where, default_order
@@ -36,7 +36,7 @@ class Groups(BaseService):
         group_id: str,
         include_users: bool = False,
         include_inactive_users: bool = False,
-    ) -> GroupResult:
+    ):
         result = await self._client.get_group(
             group_id=group_id,
             include_users=include_users,
@@ -51,7 +51,7 @@ class Groups(BaseService):
         group_id: str,
         include_users: bool = False,
         include_inactive_users: bool = False,
-    ) -> AsyncIterator[GroupResult]:
+    ):
         async for result in self._client.get_group_subscription(
             group_id=group_id,
             include_users=include_users,
@@ -66,20 +66,18 @@ class Groups(BaseService):
         user_id: str,
         include_users: bool = False,
         include_inactive_users: bool = False,
-        where: Optional[eetschema_users_in_group_bool_exp] = None,
-        order: Optional[List[eetschema_users_in_group_order_by]] = None,
+        where: Optional[WhereGroup] = None,
+        order: Optional[List[OrderGroup]] = None,
         limit: Optional[int] = None,
-    ) -> List[GroupResult]:
+    ):
         where_data = build_where(
-            eetschema_users_in_group_bool_exp,
+            WhereGroup,
             where,
             user_id=String_comparison_exp(_eq=user_id),
         )
         order_data = default_order(
             order,
-            eetschema_users_in_group_order_by(
-                group=eetschema_group_order_by(created_at=order_by.asc)
-            ),
+            OrderGroup(created_at=order_by.asc),
         )
 
         result = await self._client.all_groups(
@@ -98,22 +96,19 @@ class Groups(BaseService):
         user_id: str,
         include_users: bool = False,
         include_inactive_users: bool = False,
-        where: Optional[eetschema_users_in_group_bool_exp] = None,
-        order: Optional[List[eetschema_users_in_group_order_by]] = None,
+        where: Optional[WhereGroup] = None,
+        order: Optional[List[OrderGroup]] = None,
         limit: Optional[int] = None,
-    ) -> AsyncIterator[List[GroupResult]]:
-        where_data = (
-            where.model_copy(update={"user_id": String_comparison_exp(_eq=user_id)})
-            if where is not None
-            else eetschema_users_in_group_bool_exp(
-                user_id=String_comparison_exp(_eq=user_id)
-            )
+    ):
+        where_data = build_where(
+            WhereGroup,
+            where,
+            user_id=String_comparison_exp(_eq=user_id),
         )
-        order_data = order or [
-            eetschema_users_in_group_order_by(
-                group=eetschema_group_order_by(created_at=order_by.asc)
-            )
-        ]
+        order_data = default_order(
+            order,
+            OrderGroup(created_at=order_by.asc),
+        )
 
         async for result in self._client.all_groups_subscription(
             where=where_data,
@@ -126,7 +121,7 @@ class Groups(BaseService):
             if result:
                 yield transform_all_groups(result)
 
-    async def create(self, name: str, user_id: str) -> GroupResult:
+    async def create(self, name: str, user_id: str):
         result = await self._client.create_group(
             name=name,
             user_id=user_id,
@@ -134,9 +129,7 @@ class Groups(BaseService):
         )
         return transform_create_group(result)
 
-    async def update(
-        self, group_id: str, data: eetschema_group_set_input
-    ) -> GroupResult:
+    async def update(self, group_id: str, data: UpdateGroup):
         result = await self._client.update_group(
             group_id=group_id,
             set_=data,

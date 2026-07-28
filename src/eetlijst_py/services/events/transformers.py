@@ -1,41 +1,17 @@
-from datetime import datetime
 from typing import Optional
 
 from eetlijst_py.generated.automatic_events import (
     AutomaticEvents,
     AutomaticEventsQueryTodaysEvents,
 )
-from eetlijst_py.generated.base_model import BaseModel
-from eetlijst_py.generated.fragments import (
-    EventFields,
-    EventFieldsLinkedExpenses,
-    EventFieldsUser,
-)
+from eetlijst_py.generated.fragments import EventFields
 from eetlijst_py.generated.update_event import UpdateEvent
 
 from eetlijst_py.exceptions import EetlijstException
 
-from eetlijst_py.services.event_attendance.transformers import (
-    Attendance,
-    transform_attendance,
-)
+from eetlijst_py.services.event_attendance.transformers import transform_attendance
 
-
-class Event(BaseModel):
-    id: str
-    group_id: str
-    open: bool
-    start_date: datetime
-    closed_by: str | None
-    signup_deadline: datetime | None
-    changed_signup_time: bool
-    name: str
-    description: str | None
-    user: EventFieldsUser | None
-    created_at: datetime | None
-    updated_at: datetime | None
-    expenses: list[EventFieldsLinkedExpenses] | None = None
-    attendees: list[Attendance] | None = None
+from .types import Event
 
 
 def transform_automatic_events(

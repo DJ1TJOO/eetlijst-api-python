@@ -8,12 +8,12 @@ from eetlijst_py.services.base import BaseService
 class App(BaseService):
 
     async def status(self):
-        result = await self._client.app_status(headers=self._get_headers())
+        result = await self._client.get_app_status(headers=self._get_headers())
 
         return transform_app_status(result)
 
     async def status_subscription(self):
-        async for result in self._client.app_status_subscription(
+        async for result in self._client.get_app_status_subscription(
             headers=self._get_ws_headers()
         ):
             if result and result.eetschema_app_status:

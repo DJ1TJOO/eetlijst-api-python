@@ -1,4 +1,4 @@
-query GroupTotalExpense($groupId: uuid) {
+query GetGroupTotalExpense($groupId: uuid) {
 	eetschema_expense_aggregate(
 		where: { group_id: { _eq: $groupId }, deleted: { _eq: false } }
 	) {

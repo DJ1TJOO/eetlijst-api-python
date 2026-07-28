@@ -1,17 +1,13 @@
-from datetime import datetime
-
 from .base_model import BaseModel
+from .fragments import AppStatusFields
 
 
 class GetAppStatusSubscription(BaseModel):
     eetschema_app_status: list["GetAppStatusSubscriptionEetschemaAppStatus"]
 
 
-class GetAppStatusSubscriptionEetschemaAppStatus(BaseModel):
-    id: str
-    beta_online: bool
-    created_at: datetime
-    updated_at: datetime
+class GetAppStatusSubscriptionEetschemaAppStatus(AppStatusFields):
+    pass
 
 
 GetAppStatusSubscription.model_rebuild()

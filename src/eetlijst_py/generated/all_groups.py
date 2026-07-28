@@ -5,23 +5,16 @@ from .fragments import GroupFields, UserInGroupFields
 
 
 class AllGroups(BaseModel):
-    eetschema_users_in_group: list["AllGroupsEetschemaUsersInGroup"]
+    eetschema_group: list["AllGroupsEetschemaGroup"]
 
 
-class AllGroupsEetschemaUsersInGroup(BaseModel):
-    group: "AllGroupsEetschemaUsersInGroupGroup"
+class AllGroupsEetschemaGroup(GroupFields):
+    users_in_groups: Optional[list["AllGroupsEetschemaGroupUsersInGroups"]] = None
 
 
-class AllGroupsEetschemaUsersInGroupGroup(GroupFields):
-    users_in_groups: Optional[
-        list["AllGroupsEetschemaUsersInGroupGroupUsersInGroups"]
-    ] = None
-
-
-class AllGroupsEetschemaUsersInGroupGroupUsersInGroups(UserInGroupFields):
+class AllGroupsEetschemaGroupUsersInGroups(UserInGroupFields):
     pass
 
 
 AllGroups.model_rebuild()
-AllGroupsEetschemaUsersInGroup.model_rebuild()
-AllGroupsEetschemaUsersInGroupGroup.model_rebuild()
+AllGroupsEetschemaGroup.model_rebuild()

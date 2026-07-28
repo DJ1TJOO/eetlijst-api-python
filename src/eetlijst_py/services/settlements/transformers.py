@@ -1,14 +1,9 @@
-﻿from datetime import datetime
-from typing import Optional
+﻿from typing import Optional
 
 from pydantic import BaseModel, ConfigDict
 
 from eetlijst_py.generated.create_settlement import CreateSettlement
-from eetlijst_py.generated.fragments import (
-    ExpenseFields,
-    SettlementFields,
-    SettlementFieldsCreatedBy,
-)
+from eetlijst_py.generated.fragments import ExpenseFields, SettlementFields
 from eetlijst_py.generated.settle_unsettled_expenses import SettleUnsettledExpenses
 from eetlijst_py.generated.settlement_expenses import SettlementExpenses
 from eetlijst_py.generated.settlement_expenses_subscription import (
@@ -18,18 +13,7 @@ from eetlijst_py.generated.settlement_expenses_subscription import (
 from eetlijst_py.exceptions import EetlijstException
 
 from eetlijst_py.services.expenses.transformers import transform_expense
-
-
-class SettlementResult(BaseModel):
-    model_config = ConfigDict(frozen=True)
-
-    id: str
-    group_id: str
-    created_at: datetime
-    updated_at: datetime
-    created_by: SettlementFieldsCreatedBy
-    expenses_total: Optional[int] = None
-    adjustments_total: Optional[int] = None
+from eetlijst_py.services.settlements.types import Settlement
 
 
 class SettleUnsettledExpensesResult(BaseModel):
@@ -39,7 +23,7 @@ class SettleUnsettledExpensesResult(BaseModel):
     expenses: list[ExpenseFields]
 
 
-def transform_settlement(settlement: Optional[SettlementFields]) -> SettlementResult:
+def transform_settlement(settlement: Optional[SettlementFields]) -> Settlement:
     if not settlement:
         raise EetlijstException("Settlement not found")
 
@@ -65,10 +49,10 @@ def transform_settlement(settlement: Optional[SettlementFields]) -> SettlementRe
         "adjustments_total": adjustments_total,
     }
 
-    return SettlementResult(**data)
+    return Settlement(**data)
 
 
-def transform_create_settlement(result: CreateSettlement) -> SettlementResult:
+def transform_create_settlement(result: CreateSettlement) -> Settlement:
     if not result.settlement:
         raise EetlijstException("Failed to create settlement")
 
