@@ -11,6 +11,7 @@ from eetlijst_py.generated.update_group import UpdateGroup
 
 from eetlijst_py.exceptions import EetlijstException
 
+from eetlijst_py.services.event_attendance.transformers import AttendanceStatus
 from eetlijst_py.services.users.transformers import UserResult, transform_user
 
 
@@ -24,13 +25,13 @@ class UserInGroupResult(BaseModel):
     order: Optional[int]
     start_holliday: Optional[datetime]
     end_holliday: Optional[datetime]
-    monday: Optional[bool]
-    tuesday: Optional[bool]
-    wednesday: Optional[bool]
-    thursday: Optional[bool]
-    friday: Optional[bool]
-    saturday: Optional[bool]
-    sunday: Optional[bool]
+    monday: Optional[AttendanceStatus]
+    tuesday: Optional[AttendanceStatus]
+    wednesday: Optional[AttendanceStatus]
+    thursday: Optional[AttendanceStatus]
+    friday: Optional[AttendanceStatus]
+    saturday: Optional[AttendanceStatus]
+    sunday: Optional[AttendanceStatus]
     user: UserResult
 
 
